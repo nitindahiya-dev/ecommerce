@@ -1,8 +1,10 @@
-// backend/server.js
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const { initDb } = require('./src/db');
+// backend/server.ts
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { initDb } from "./src/db";
+
+dotenv.config();
 
 const app = express();
 
@@ -12,15 +14,12 @@ initDb();
 app.use(cors());
 app.use(express.json());
 
-// Example API endpoint
-app.get('/api', (req, res) => {
+// Example API endpoint with typed parameters
+app.get('/api', (req: Request, res: Response) => {
   res.json({ message: 'E-commerce API is running' });
 });
 
-// More endpoints (e.g., products, users, orders) can go here.
-// For example: app.use('/api/products', require('./src/routes/products'));
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
 });

@@ -4,15 +4,70 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  /* your existing background color */
+  --foreground: #000000;
+  /* your existing foreground color */
+
+  /* Add your custom color variables */
+  --primary: #3B5249;
+  --secondary: #519872;
+  --accent: #A4B494;
 }
 
-@media (prefers-color-scheme: dark) {
+
+/* globals.css or your main CSS file */
+@font-face {
+  font-family: 'Cardo';
+  src: url('../public/fonts/cardo_normal_400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url('../public/fonts/HankenGrotesk-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url('../public/fonts/HankenGrotesk-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  src: url('../public/fonts/Inter-VariableFont_slnt,wght.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: oblique 0deg 10deg;
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  src: url('../public/fonts/Unbounded-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Xstore Icons';
+  src: url('../public/fonts/xstore-icons-light.ttf') format('truetype'),
+    url('../public/fonts/xstore-icons-light.woff') format('woff'),
+    url('../public/fonts/xstore-icons-light.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   color: var(--foreground);

@@ -1,6 +1,7 @@
 // frontend/pages/index.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 export default function Home() {
   const [message, setMessage] = useState('');
@@ -14,8 +15,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold">E-commerce Site</h1>
+    <div className='relative bg-background'>
+      <Navbar />
+      <h1 className="text-3xl font-bold text-black font-cardo">E-commerce Site</h1>
       <p className="mt-4">{message}</p>
     </div>
   );
