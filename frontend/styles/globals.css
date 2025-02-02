@@ -3,19 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  /* your existing background color */
+  --background: #F5F5ED;
   --foreground: #000000;
-  /* your existing foreground color */
-
-  /* Add your custom color variables */
   --primary: #3B5249;
   --secondary: #519872;
   --accent: #A4B494;
 }
 
+::selection{
+  background: var(--accent);
+  color: var(--primary);
+}
 
-/* globals.css or your main CSS file */
 @font-face {
   font-family: 'Cardo';
   src: url('../public/fonts/cardo_normal_400.woff2') format('woff2');
