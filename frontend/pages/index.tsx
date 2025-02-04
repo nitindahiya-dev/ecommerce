@@ -4,6 +4,8 @@ import carouselImage1 from "../public/image/carousel-image-1.jpg";
 import carouselImage2 from "../public/image/carousel-image-2.jpg";
 import beforeImage from "../public/image/before.jpg";
 import afterImage from "../public/image/after.jpg";
+import latestImage1 from "../public/image/latest-image-1.jpg";
+import latestImage2 from "../public/image/latest-image-2.jpg";
 import Image from 'next/image';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
@@ -19,7 +21,7 @@ export default function Home() {
       {/* Navbar End */}
 
       {/* Banner Start */}
-      <div className="min-h-screen flex items-center flex-col-reverse sm:flex-row">
+      <div className="min-h-screen flex  flex-col-reverse sm:flex-row">
         <div className="sm:pl-32 ">
           <h1 className="text-3xl line-clamp-2 sm:text-5xl leading-snug m-5 sm:mb-16 font-unbounded">
             Bringing the beauty of nature to your doorstep
@@ -71,8 +73,8 @@ export default function Home() {
       {/* Banner End */}
 
       {/* BeforeAfter Start */}
-      <div className="flex items-center flex-col mb-10 justify-center gap-10 max-w-[85vw] mx-auto">
-        <h2 className='text-3xl sm:text-5xl font-unbounded'>The Pruning Scissors</h2>
+      <div className="flex items-center mb-32 flex-col  justify-center gap-10 max-w-[85vw] mx-auto ">
+        <h2 className='text-3xl sm:text-5xl font-unbounded mb-10'>The Pruning Scissors</h2>
         <div className="w-full relative">
           <Compare
             firstImage={beforeImage}
@@ -91,9 +93,27 @@ export default function Home() {
       {/* BeforeAfter End */}
 
       {/* Latest Collection Start */}
-      <div className="flex items-center flex-col mb-10 justify-center gap-10 max-w-[85vw] mx-auto">
-        <h2 className='text-3xl sm:text-5xl font-unbounded'>Our Latest Collection</h2>
-        
+      <div className="flex items-center flex-col  mb-32 justify-center gap-10 max-w-[85vw] mx-auto ">
+        <h2 className='text-3xl sm:text-5xl font-unbounded mb-10'>Our Latest Collection</h2>
+        <div className="flex gap-10">
+          <div className="flex w-full gap-10">
+            <div className="flex items-center flex-col gap-5">
+              <Image src={latestImage1} alt='Plant Image' className='w-full rounded-full' />
+              <p className='font-unbounded font-semi  text-2xl pt-5'>Air Purifying Plants</p>
+              <span className='font-hanken font-thin text-xl text-center '>Breathe easy with houseplants that clean the air in your house.</span>
+            </div>
+            <div className="flex items-center flex-col gap-5">
+              <Image src={latestImage2} alt='Plant Image' className='w-full rounded-full' />
+              <p className='font-unbounded font-semi  text-2xl pt-5'>Air Purifying Plants</p>
+              <span className='font-hanken font-thin text-xl text-center '>Breathe easy with houseplants that clean the air in your house.</span>
+            </div>
+            <div className="flex items-center flex-col gap-5">
+              <Image src={latestImage1} alt='Plant Image' className='w-full rounded-full' />
+              <p className='font-unbounded font-semi  text-2xl pt-5'>Air Purifying Plants</p>
+              <span className='font-hanken font-thin text-xl text-center '>Breathe easy with houseplants that clean the air in your house.</span>
+            </div>
+          </div>
+        </div>
       </div>
       {/* Latest Collection End */}
 
