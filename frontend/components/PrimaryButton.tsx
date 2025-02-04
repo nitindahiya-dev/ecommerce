@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "next/link";
 
 interface PrimaryButtonProps {
   href: string;
@@ -11,12 +11,12 @@ const PrimaryButton = ({ href, text, className }: PrimaryButtonProps) => {
     <div>
       <Link
         href={href}
-        className={`bg-primary text-white font-hanken text-xl px-12 py-3 rounded-full hover:bg-background hover:text-primary hover:outline outline-2 ${className}`}
+        className={`bg-[var(--primary)] text-white font-hanken text-xl px-12 py-3 rounded-full hover:bg-[var(--background)] hover:text-[var(--primary)] hover:outline outline-2 ${className}`}
       >
         {text}
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default PrimaryButton
+export default PrimaryButton;

@@ -2,6 +2,8 @@ import Navbar from '../components/Navbar';
 import bannerImage from "../public/image/bannerImage.jpg";
 import carouselImage1 from "../public/image/carousel-image-1.jpg";
 import carouselImage2 from "../public/image/carousel-image-2.jpg";
+import beforeImage from "../public/image/before.jpg";
+import afterImage from "../public/image/after.jpg";
 import Image from 'next/image';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
@@ -23,10 +25,10 @@ export default function Home() {
             Bringing the beauty of nature to your doorstep
           </h1>
           <div className="flex flex-col sm:flex-row items-center ">
-            <Image 
-              src={bannerImage} 
-              alt='banner plant image' 
-              className='rounded-xl sm:w-[30vw]' 
+            <Image
+              src={bannerImage}
+              alt='banner plant image'
+              className='rounded-xl sm:w-[30vw]'
             />
             <div className="p-16 flex flex-col gap-10 items-start">
               <p className="font-hanken font-thin text-xl">
@@ -51,14 +53,14 @@ export default function Home() {
           </div>
         </div>
         <div className="sm:w-[70vw]">
-          <Carousel 
-            showThumbs={false} 
-            showIndicators={false} 
-            showArrows={false} 
-            showStatus={false} 
-            infiniteLoop={true} 
-            interval={6000} 
-            dynamicHeight={true} 
+          <Carousel
+            showThumbs={false}
+            showIndicators={false}
+            showArrows={false}
+            showStatus={false}
+            infiniteLoop={true}
+            interval={6000}
+            dynamicHeight={true}
             autoPlay={true}
           >
             <Image src={carouselImage1} alt='carousel image 1' />
@@ -68,18 +70,34 @@ export default function Home() {
       </div>
       {/* Banner End */}
 
-      {/* BeforeAfter Component */}
+      {/* BeforeAfter Start */}
       <div className="flex items-center flex-col mb-10 justify-center gap-10 max-w-[85vw] mx-auto">
         <h2 className='text-3xl sm:text-5xl font-unbounded'>The Pruning Scissors</h2>
-        <Compare
-        firstImage="https://assets.aceternity.com/code-problem.png"
-        secondImage="https://assets.aceternity.com/code-solution.png"
-        firstImageClassName="object-cover object-left-top"
-        secondImageClassname="object-cover object-left-top"
-        className="h-[250px] w-[200px] md:h-[500px] md:w-[500px]"
-        slideMode="hover"
-      />
+        <div className="w-full relative">
+          <Compare
+            firstImage={beforeImage}
+            secondImage={afterImage}
+            firstImageClassName="object-cover object-left-top"
+            secondImageClassname="object-cover object-left-top"
+            className="h-[250px] w-[200px] md:h-[600px] md:w-full"
+            slideMode="hover"
+          />
+          <div className="flex justify-between  bottom-5 left-10 right-10 absolute z-20">
+            <p className='bg-[var(--background)] font-unbounded font-bold px-5 py-2 tracking-widest text-lg'>Before</p>
+            <p className='bg-[var(--background)] font-unbounded font-bold px-5 py-2 tracking-widest text-lg'>After</p>
+          </div>
+        </div>
       </div>
+      {/* BeforeAfter End */}
+
+      {/* Latest Collection Start */}
+      <div className="flex items-center flex-col mb-10 justify-center gap-10 max-w-[85vw] mx-auto">
+        <h2 className='text-3xl sm:text-5xl font-unbounded'>Our Latest Collection</h2>
+        
+      </div>
+      {/* Latest Collection End */}
+
+
     </div>
   );
 }
