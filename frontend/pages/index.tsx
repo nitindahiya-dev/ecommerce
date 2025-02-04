@@ -12,6 +12,7 @@ import { Carousel } from 'react-responsive-carousel';
 import PrimaryButton from '../components/PrimaryButton';
 import CountUp from 'react-countup';
 import { Compare } from '../components/ui/compare';
+import Footer from '../components/Footer';
 
 export default function Home() {
   return (
@@ -23,16 +24,16 @@ export default function Home() {
       {/* Banner Start */}
       <div className="min-h-screen flex  flex-col-reverse sm:flex-row">
         <div className="sm:pl-32 ">
-          <h1 className="text-3xl line-clamp-2 sm:text-5xl leading-snug m-5 sm:mb-16 font-unbounded">
+          <h1 className="text-2xl line-clamp-2 sm:text-5xl leading-snug m-5 sm:mb-16 font-unbounded">
             Bringing the beauty of nature to your doorstep
           </h1>
           <div className="flex flex-col sm:flex-row items-center ">
             <Image
               src={bannerImage}
               alt='banner plant image'
-              className='rounded-xl sm:w-[30vw]'
+              className='rounded-xl w-[90vw] sm:w-[30vw]'
             />
-            <div className="p-16 flex flex-col gap-10 items-start">
+            <div className="p-5 pb-10 sm:p-16 flex flex-col gap-10 items-start">
               <p className="font-hanken font-thin text-xl">
                 We are your one-stop destination for things related to plants gardening, providing you with high-quality products and expert advice to help you.
               </p>
@@ -73,15 +74,15 @@ export default function Home() {
       {/* Banner End */}
 
       {/* BeforeAfter Start */}
-      <div className="flex items-center mb-32 flex-col  justify-center gap-10 max-w-[85vw] mx-auto ">
-        <h2 className='text-3xl sm:text-5xl font-unbounded mb-10'>The Pruning Scissors</h2>
+      <div className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto ">
+        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>The Pruning Scissors</h2>
         <div className="w-full relative">
           <Compare
             firstImage={beforeImage}
             secondImage={afterImage}
             firstImageClassName="object-cover object-left-top"
             secondImageClassname="object-cover object-left-top"
-            className="h-[250px] w-[200px] md:h-[600px] md:w-full"
+            className="h-[250px]  md:h-[600px] w-full"
             slideMode="hover"
           />
           <div className="flex justify-between  bottom-5 left-10 right-10 absolute z-20">
@@ -93,23 +94,23 @@ export default function Home() {
       {/* BeforeAfter End */}
 
       {/* Latest Collection Start */}
-      <div className="flex items-center flex-col  mb-32 justify-center gap-10 max-w-[85vw] mx-auto ">
-        <h2 className='text-3xl sm:text-5xl font-unbounded mb-10'>Our Latest Collection</h2>
+      <div className="flex items-center flex-col  mb-10 sm:mb-32 justify-center sm:gap-10 max-w-[85vw] mx-auto ">
+        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>Our Latest Collection</h2>
         <div className="flex gap-10">
-          <div className="flex w-full gap-10">
-            <div className="flex items-center flex-col gap-5">
-              <Image src={latestImage1} alt='Plant Image' className='w-full rounded-full' />
-              <p className='font-unbounded font-semi  text-2xl pt-5'>Air Purifying Plants</p>
+          <div className="flex w-full flex-col sm:flex-row gap-10">
+            <div className="flex items-center flex-col gap-3 sm:gap-5">
+              <Image src={latestImage1} alt='Plant Image' className='w-full rounded-3xl' />
+              <p className='font-unbounded font-semi text-xl sm:text-2xl pt-5'>Air Purifying Plants</p>
               <span className='font-hanken font-thin text-xl text-center '>Breathe easy with houseplants that clean the air in your house.</span>
             </div>
-            <div className="flex items-center flex-col gap-5">
-              <Image src={latestImage2} alt='Plant Image' className='w-full rounded-full' />
-              <p className='font-unbounded font-semi  text-2xl pt-5'>Air Purifying Plants</p>
+            <div className="flex items-center flex-col gap-3 sm:gap-5">
+              <Image src={latestImage2} alt='Plant Image' className='w-full rounded-3xl' />
+              <p className='font-unbounded font-semi text-xl sm:text-2xl pt-5'>Air Purifying Plants</p>
               <span className='font-hanken font-thin text-xl text-center '>Breathe easy with houseplants that clean the air in your house.</span>
             </div>
-            <div className="flex items-center flex-col gap-5">
-              <Image src={latestImage1} alt='Plant Image' className='w-full rounded-full' />
-              <p className='font-unbounded font-semi  text-2xl pt-5'>Air Purifying Plants</p>
+            <div className="flex items-center flex-col gap-3 sm:gap-5">
+              <Image src={latestImage1} alt='Plant Image' className='w-full rounded-3xl' />
+              <p className='font-unbounded font-semi text-xl sm:text-2xl pt-5'>Air Purifying Plants</p>
               <span className='font-hanken font-thin text-xl text-center '>Breathe easy with houseplants that clean the air in your house.</span>
             </div>
           </div>
@@ -117,6 +118,10 @@ export default function Home() {
       </div>
       {/* Latest Collection End */}
 
+
+      {/* Footer Start */}
+      <Footer></Footer>
+      {/* Footer End */}
 
     </div>
   );
