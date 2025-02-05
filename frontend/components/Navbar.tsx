@@ -29,7 +29,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50">
       {/* Top Navbar */}
       <div className="backdrop-blur-md bg-white/30 border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[90vw] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex-shrink-0">

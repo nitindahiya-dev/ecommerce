@@ -1,18 +1,21 @@
-import Navbar from '../components/Navbar';
+import Navbar from "../components/Navbar";
 import bannerImage from "../public/image/bannerImage.jpg";
 import carouselImage1 from "../public/image/carousel-image-1.jpg";
 import carouselImage2 from "../public/image/carousel-image-2.jpg";
+import productImage from "../public/image/product-image.jpg";
+import productImageHover from "../public/image/product-image-hover.jpg";
 import beforeImage from "../public/image/before.jpg";
 import afterImage from "../public/image/after.jpg";
 import latestImage1 from "../public/image/latest-image-1.jpg";
 import latestImage2 from "../public/image/latest-image-2.jpg";
-import Image from 'next/image';
+import Image from "next/image";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from 'react-responsive-carousel';
-import PrimaryButton from '../components/PrimaryButton';
-import CountUp from 'react-countup';
-import { Compare } from '../components/ui/compare';
-import Footer from '../components/Footer';
+import { Carousel } from "react-responsive-carousel";
+import PrimaryButton from "../components/PrimaryButton";
+import CountUp from "react-countup";
+import { Compare } from "../components/ui/compare";
+import Footer from "../components/Footer";
+import BuyNowCard from "../components/BuyNowCard";
 
 export default function Home() {
   return (
@@ -37,7 +40,7 @@ export default function Home() {
               <p className="font-hanken font-thin text-xl">
                 We are your one-stop destination for things related to plants gardening, providing you with high-quality products and expert advice to help you.
               </p>
-              <PrimaryButton href="#" text="See Collection" />
+              <PrimaryButton href="#" text="Explore Collection" />
             </div>
           </div>
           <div className="hidden sm:flex flex-row gap-10 mt-10">
@@ -73,9 +76,49 @@ export default function Home() {
       </div>
       {/* Banner End */}
 
+      {/* Buy Plants Start */}
+      <div className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto ">
+        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>Featured Botanicals</h2>
+        <div className="flex justify-between w-full">
+          <BuyNowCard
+            productImage={productImage}
+            productImageHover={productImageHover}
+            title="Calathea Pin-Stripe Plant"
+            price={210}
+            sizes={["small", "medium", "tall"]}
+            buttonHref="#"
+          />
+          <BuyNowCard
+            productImage={productImage}
+            productImageHover={productImageHover}
+            title="Calathea Pin-Stripe Plant"
+            price={210}
+            sizes={["small", "medium", "tall"]}
+            buttonHref="#"
+          />
+          <BuyNowCard
+            productImage={productImage}
+            productImageHover={productImageHover}
+            title="Calathea Pin-Stripe Plant"
+            price={210}
+            sizes={["small", "medium", "tall"]}
+            buttonHref="#"
+          />
+          <BuyNowCard
+            productImage={productImage}
+            productImageHover={productImageHover}
+            title="Calathea Pin-Stripe Plant"
+            price={210}
+            sizes={["small", "medium", "tall"]}
+            buttonHref="#"
+          />        </div>
+      </div>
+      {/* Buy Plants End */}
+
+
       {/* BeforeAfter Start */}
       <div className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto ">
-        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>The Pruning Scissors</h2>
+        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>Transformation Gallery</h2>
         <div className="w-full relative">
           <Compare
             firstImage={beforeImage}
@@ -95,7 +138,7 @@ export default function Home() {
 
       {/* Latest Collection Start */}
       <div className="flex items-center flex-col  mb-10 sm:mb-32 justify-center sm:gap-10 max-w-[85vw] mx-auto ">
-        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>Our Latest Collection</h2>
+        <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>New Arrivals</h2>
         <div className="flex gap-10">
           <div className="flex w-full flex-col sm:flex-row gap-10">
             <div className="flex items-center flex-col gap-3 sm:gap-5">
@@ -120,7 +163,7 @@ export default function Home() {
 
 
       {/* Footer Start */}
-      <Footer></Footer>
+      <Footer />
       {/* Footer End */}
 
     </div>
