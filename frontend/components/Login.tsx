@@ -2,7 +2,11 @@
 import React from "react";
 import PrimaryButton from "./PrimaryButton";
 
-const Login: React.FC = () => {
+interface LoginProps {
+  onContentTypeChange?: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onContentTypeChange }) => {
   return (
     <form className="space-y-4">
       <div>
@@ -37,7 +41,10 @@ const Login: React.FC = () => {
       </div>
       <div className="flex items-center">
         <input type="checkbox" id="remember" className="mr-2" />
-        <label htmlFor="remember" className="text-sm font-hanken text-gray-600">
+        <label
+          htmlFor="remember"
+          className="text-sm font-hanken text-gray-600"
+        >
           Remember me
         </label>
       </div>
@@ -49,12 +56,13 @@ const Login: React.FC = () => {
         >
           Forgot Password?
         </a>
-        <a
-          href="#"
+        <button
+          type="button"
+          onClick={onContentTypeChange}
           className="text-sm text-[var(--primary)] hover:underline font-hanken"
         >
           Register
-        </a>
+        </button>
       </div>
       <div className="flex items-center justify-center">
         <span className="text-gray-600 font-hanken">or</span>

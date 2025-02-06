@@ -3,16 +3,18 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiX } from "react-icons/hi";
 import Login from "./Login";
+import Register from "./Register";
 import WishList from "./Wishlist";
 import Cart from "./Cart";
 
 export interface SidebarProps {
   onClose: () => void;
   title?: string;
-  contentType: "login" | "wishlist" | "cart";
+  contentType: "login" | "wishlist" | "cart" | "register";
   children?: React.ReactNode;
   widthClass?: string;
   overlayClassName?: string;
+  onContentTypeChange?: (type: "login" | "register") => void;
 }
 
 const overlayVariants = {
@@ -33,6 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   children,
   widthClass = "w-3/4 max-w-sm",
   overlayClassName = "bg-black/30",
+  onContentTypeChange,
 }) => {
   return (
     <AnimatePresence>
@@ -43,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         exit="hidden"
         variants={overlayVariants}
         transition={{ duration: 0.3 }}
-        onClick={onClose} // Clicking on the overlay closes the sidebar
+        onClick={onClose}
       >
         <motion.div
           className={`absolute top-0 right-0 h-full ${widthClass} bg-[var(--background)] shadow-lg p-6`}
@@ -52,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           exit="exit"
           variants={sidebarVariants}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          onClick={(e) => e.stopPropagation()} // Prevents clicks inside from closing the sidebar
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center mb-4">
             {title && <h2 className="text-xl font-bold">{title}</h2>}
@@ -60,8 +63,12 @@ const Sidebar: React.FC<SidebarProps> = ({
               <HiX className="h-6 w-6" />
             </button>
           </div>
-          {/* Render content based on the contentType prop */}
-          {contentType === "login" && <Login />}
+          {contentType === "login" && (
+            <Login onContentTypeChange={() => onContentTypeChange && onContentTypeChange("register")} />
+          )}
+          {contentType === "register" && (
+            <Register onContentTypeChange={() => onContentTypeChange && onContentTypeChange("login")} />
+          )}
           {contentType === "wishlist" && <WishList />}
           {contentType === "cart" && <Cart />}
           {children}

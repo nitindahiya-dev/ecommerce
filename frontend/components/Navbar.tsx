@@ -8,31 +8,27 @@ import { HiMiniShoppingBag } from "react-icons/hi2";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../public/image/Logo-1.svg";
-import Sidebar from "./Sidebar"; // Import the updated Sidebar
+import Sidebar from "./Sidebar";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // sidebarType can be "login", "wishlist", "cart", or null.
-  const [sidebarType, setSidebarType] = useState<"login" | "wishlist" | "cart" | null>(null);
+  const [sidebarType, setSidebarType] = useState<"login" | "wishlist" | "cart" | "register" | null>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
     document.body.style.overflow = !isMenuOpen ? "hidden" : "auto";
   };
 
-  // Open sidebar for login
   const openLoginSidebar = () => {
     setSidebarType("login");
     document.body.style.overflow = "hidden";
   };
 
-  // Open sidebar for wishlist
   const openWishlistSidebar = () => {
     setSidebarType("wishlist");
     document.body.style.overflow = "hidden";
   };
 
-  // Open sidebar for cart
   const openCartSidebar = () => {
     setSidebarType("cart");
     document.body.style.overflow = "hidden";
@@ -43,7 +39,6 @@ const Navbar = () => {
     document.body.style.overflow = "auto";
   };
 
-  // Mobile menu animation variants (slide from left)
   const menuVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
@@ -62,7 +57,6 @@ const Navbar = () => {
                 <Image src={logo} alt="xstore logo" className="w-32 md:w-40" />
               </Link>
             </div>
-
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:space-x-8">
               <Link href="#" className="hover:text-gray-600 transition-colors">
@@ -81,26 +75,20 @@ const Navbar = () => {
                 Contacts
               </Link>
             </div>
-
             {/* Icons and Mobile Menu Button */}
             <div className="flex items-center gap-4 md:gap-6">
-              {/* Person Icon: Opens login sidebar */}
               <IoPersonOutline
                 onClick={openLoginSidebar}
                 className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
               />
-              {/* Heart Icon: Opens wishlist sidebar */}
               <FaRegHeart
                 onClick={openWishlistSidebar}
                 className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
               />
-              {/* Cart Icon: Opens cart sidebar */}
               <HiMiniShoppingBag
                 onClick={openCartSidebar}
                 className="w-6 h-6 hover:text-gray-600 cursor-pointer transition-colors"
               />
-
-              {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
                 className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none"
@@ -115,7 +103,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
       {/* Mobile Sliding Menu */}
       <AnimatePresence>
         {isMenuOpen && (
@@ -164,7 +151,6 @@ const Navbar = () => {
                 Contacts
               </Link>
             </div>
-            {/* Close Button inside Menu */}
             <button
               onClick={toggleMenu}
               className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none"
@@ -174,7 +160,6 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Sidebar for Person/Heart/Cart Icons */}
       <AnimatePresence>
         {sidebarType && (
@@ -185,10 +170,18 @@ const Navbar = () => {
                 ? "User Account"
                 : sidebarType === "wishlist"
                 ? "Wishlist"
-                : "Cart"
+                : sidebarType === "cart"
+                ? "Cart"
+                : sidebarType === "register"
+                ? "Register Now"
+                : ""
             }
+            
             widthClass="w-3/4 max-w-md"
             contentType={sidebarType}
+            onContentTypeChange={(type: "login" | "register") =>
+              setSidebarType(type)
+            }
           />
         )}
       </AnimatePresence>
