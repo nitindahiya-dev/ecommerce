@@ -125,7 +125,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="sm:mt-12 border-t border-gray-200 text-center">
+        <div className="mt-6 border-t border-gray-200 text-center">
           <p className="font-hanken font-thin text-sm">
             © {new Date().getFullYear()} GreenThumb. All rights reserved.
           </p>

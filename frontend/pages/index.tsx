@@ -79,7 +79,7 @@ export default function Home() {
       {/* Buy Plants Start */}
       <div className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto ">
         <h2 className='text-2xl sm:text-5xl font-unbounded mb-10'>Featured Botanicals</h2>
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between flex-col sm:flex-row gap-7 w-full">
           <BuyNowCard
             productImage={productImage}
             productImageHover={productImageHover}

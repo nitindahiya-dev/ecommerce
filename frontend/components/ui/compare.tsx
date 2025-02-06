@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { HiDotsVertical } from "react-icons/hi";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { SparklesCore } from "../ui/sparkles";
 
 export interface CompareProps {
@@ -82,14 +82,17 @@ export const Compare: React.FC<CompareProps> = ({
     startAutoplay();
   }
 
-  const handleStart = useCallback(
-    (clientX: number) => {
+  // Explicitly type handleStart as accepting a number
+  const handleStart: (clientX: number) => void = useCallback(
+    (_clientX: number) => {
+      void _clientX; // Mark the parameter as used
       if (slideMode === "drag") {
         setIsDragging(true);
       }
     },
     [slideMode]
   );
+  
 
   const handleEnd = useCallback(() => {
     if (slideMode === "drag") {
