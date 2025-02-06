@@ -13,7 +13,7 @@ const PrimaryButton = ({ href, text, className, icon }: PrimaryButtonProps) => {
     <>
       <Link
         href={href}
-        className={`bg-[var(--primary)] text-white flex items-center font-hanken text-xl px-12 py-3 rounded-full hover:bg-[var(--background)] hover:text-[var(--primary)] hover:outline outline-2 ${className}`}
+        className={`bg-[var(--primary)] text-white flex items-center justify-center font-hanken text-xl px-12 py-3 rounded-full hover:bg-[var(--background)] hover:text-[var(--primary)] hover:outline outline-2 ${className}`}
       >
         {icon}{text}
       </Link>

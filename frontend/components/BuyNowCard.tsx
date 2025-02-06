@@ -104,7 +104,7 @@ const BuyNowCard = ({
             href={buttonHref}
             text="Add to Cart"
             className={cn(
-              "w-full flex items-center justify-center py-4 text-lg font-semibold transition-transform",
+              "w-full py-4 text-lg font-semibold transition-transform",
               "hover:shadow-lg hover:scale-[1.02]",
               "active:scale-95",
               loaded && "animate-fade-in-up"

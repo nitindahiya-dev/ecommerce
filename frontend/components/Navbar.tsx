@@ -8,14 +8,39 @@ import { HiMiniShoppingBag } from "react-icons/hi2";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../public/image/Logo-1.svg";
+import Sidebar from "./Sidebar"; // Import the updated Sidebar
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // sidebarType can be "login", "wishlist", "cart", or null.
+  const [sidebarType, setSidebarType] = useState<"login" | "wishlist" | "cart" | null>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
-    // Lock the body scroll when menu is open
     document.body.style.overflow = !isMenuOpen ? "hidden" : "auto";
+  };
+
+  // Open sidebar for login
+  const openLoginSidebar = () => {
+    setSidebarType("login");
+    document.body.style.overflow = "hidden";
+  };
+
+  // Open sidebar for wishlist
+  const openWishlistSidebar = () => {
+    setSidebarType("wishlist");
+    document.body.style.overflow = "hidden";
+  };
+
+  // Open sidebar for cart
+  const openCartSidebar = () => {
+    setSidebarType("cart");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeSidebar = () => {
+    setSidebarType(null);
+    document.body.style.overflow = "auto";
   };
 
   // Mobile menu animation variants (slide from left)
@@ -34,11 +59,7 @@ const Navbar = () => {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/">
-                <Image
-                  src={logo}
-                  alt="xstore logo"
-                  className="w-32 md:w-40"
-                />
+                <Image src={logo} alt="xstore logo" className="w-32 md:w-40" />
               </Link>
             </div>
 
@@ -63,9 +84,21 @@ const Navbar = () => {
 
             {/* Icons and Mobile Menu Button */}
             <div className="flex items-center gap-4 md:gap-6">
-              <IoPersonOutline className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors" />
-              <FaRegHeart className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors" />
-              <HiMiniShoppingBag className="w-6 h-6 hover:text-gray-600 cursor-pointer transition-colors" />
+              {/* Person Icon: Opens login sidebar */}
+              <IoPersonOutline
+                onClick={openLoginSidebar}
+                className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
+              />
+              {/* Heart Icon: Opens wishlist sidebar */}
+              <FaRegHeart
+                onClick={openWishlistSidebar}
+                className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
+              />
+              {/* Cart Icon: Opens cart sidebar */}
+              <HiMiniShoppingBag
+                onClick={openCartSidebar}
+                className="w-6 h-6 hover:text-gray-600 cursor-pointer transition-colors"
+              />
 
               {/* Mobile Menu Button */}
               <button
@@ -131,7 +164,6 @@ const Navbar = () => {
                 Contacts
               </Link>
             </div>
-
             {/* Close Button inside Menu */}
             <button
               onClick={toggleMenu}
@@ -140,6 +172,24 @@ const Navbar = () => {
               <HiX className="h-8 w-8" />
             </button>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar for Person/Heart/Cart Icons */}
+      <AnimatePresence>
+        {sidebarType && (
+          <Sidebar
+            onClose={closeSidebar}
+            title={
+              sidebarType === "login"
+                ? "User Account"
+                : sidebarType === "wishlist"
+                ? "Wishlist"
+                : "Cart"
+            }
+            widthClass="w-3/4 max-w-md"
+            contentType={sidebarType}
+          />
         )}
       </AnimatePresence>
     </nav>
