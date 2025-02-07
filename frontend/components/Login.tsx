@@ -1,59 +1,101 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import PrimaryButton from "./PrimaryButton";
+import { toast } from "react-toastify";
 
 interface LoginProps {
   onContentTypeChange?: () => void;
+  onLoginSuccess?: (user: { name: string; email: string }) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onContentTypeChange }) => {
+const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    try {
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Login failed");
+        toast.error(data.message || "Login failed");
+      } else {
+        toast.success("Login successful");
+        console.log("Login successful", data.token);
+        // Store token based on "Remember me" checkbox
+        if (remember) {
+          localStorage.setItem("token", data.token);
+        } else {
+          sessionStorage.setItem("token", data.token);
+        }
+        // For demonstration, derive user name from email (in real apps, fetch user info)
+        const userName = email.split("@")[0];
+        if (onLoginSuccess) {
+          onLoginSuccess({ name: userName, email });
+        }
+      }
+    } catch (err) {
+      console.error("Login error", err);
+      setError("An error occurred");
+      toast.error("An error occurred");
+    }
+  };
+
   return (
-    <form className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label
-          htmlFor="username"
-          className="block font-hanken text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="username" className="block font-hanken text-sm font-medium text-gray-700">
           Username or Email
         </label>
         <input
           type="text"
           id="username"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="mt-1 block w-full border font-hanken border-gray-300 rounded-md p-2"
           placeholder="Enter your username or email"
           required
         />
       </div>
       <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-hanken font-medium text-gray-700"
-        >
+        <label htmlFor="password" className="block text-sm font-hanken font-medium text-gray-700">
           Password
         </label>
         <input
           type="password"
           id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="mt-1 block w-full border font-hanken border-gray-300 rounded-md p-2"
           placeholder="Enter your password"
           required
         />
       </div>
       <div className="flex items-center">
-        <input type="checkbox" id="remember" className="mr-2" />
-        <label
-          htmlFor="remember"
-          className="text-sm font-hanken text-gray-600"
-        >
+        <input
+          type="checkbox"
+          id="remember"
+          className="mr-2"
+          checked={remember}
+          onChange={(e) => setRemember(e.target.checked)}
+        />
+        <label htmlFor="remember" className="text-sm font-hanken text-gray-600">
           Remember me
         </label>
       </div>
-      <PrimaryButton href="#" text="Login" className="w-full" />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {/* Use PrimaryButton as a submit button */}
+      <PrimaryButton text="Login" type="submit" className="w-full" />
       <div className="flex items-center justify-between">
-        <a
-          href="#"
-          className="text-sm text-[var(--primary)] hover:underline font-hanken"
-        >
+        <a href="#" className="text-sm text-[var(--primary)] hover:underline font-hanken">
           Forgot Password?
         </a>
         <button
@@ -68,8 +110,8 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange }) => {
         <span className="text-gray-600 font-hanken">or</span>
       </div>
       <PrimaryButton
-        href="#"
         text="Login with Google"
+        type="button"
         className="w-full"
         icon={
           <svg

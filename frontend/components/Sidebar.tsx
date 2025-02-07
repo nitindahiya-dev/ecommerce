@@ -6,15 +6,18 @@ import Login from "./Login";
 import Register from "./Register";
 import WishList from "./Wishlist";
 import Cart from "./Cart";
+import Profile from "./Profile";
 
 export interface SidebarProps {
   onClose: () => void;
   title?: string;
-  contentType: "login" | "wishlist" | "cart" | "register";
+  // Updated union to include "profile"
+  contentType: "login" | "wishlist" | "cart" | "register" | "profile";
   children?: React.ReactNode;
   widthClass?: string;
   overlayClassName?: string;
   onContentTypeChange?: (type: "login" | "register") => void;
+  onLoginSuccess?: (user: { name: string; email: string }) => void;
 }
 
 const overlayVariants = {
@@ -36,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   widthClass = "w-3/4 max-w-sm",
   overlayClassName = "bg-black/30",
   onContentTypeChange,
+  onLoginSuccess,
 }) => {
   return (
     <AnimatePresence>
@@ -64,13 +68,23 @@ const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
           {contentType === "login" && (
-            <Login onContentTypeChange={() => onContentTypeChange && onContentTypeChange("register")} />
+            <Login
+              onContentTypeChange={() =>
+                onContentTypeChange && onContentTypeChange("register")
+              }
+              onLoginSuccess={onLoginSuccess}
+            />
           )}
           {contentType === "register" && (
-            <Register onContentTypeChange={() => onContentTypeChange && onContentTypeChange("login")} />
+            <Register
+              onContentTypeChange={() =>
+                onContentTypeChange && onContentTypeChange("login")
+              }
+            />
           )}
           {contentType === "wishlist" && <WishList />}
           {contentType === "cart" && <Cart />}
+          {contentType === "profile" && <Profile />}
           {children}
         </motion.div>
       </motion.div>

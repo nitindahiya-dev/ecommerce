@@ -1,15 +1,17 @@
 // backend/src/db.ts
 import { drizzle } from 'drizzle-orm/node-postgres';
-import postgres, { Sql } from 'postgres';
+import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-let db: ReturnType<typeof drizzle>;
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+const db = drizzle(pool);
 
 export function initDb() {
-  const client: Sql = postgres(process.env.DATABASE_URL!);
-  db = drizzle(client);
   console.log('Database initialized.');
 }
 

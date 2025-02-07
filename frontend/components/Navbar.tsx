@@ -11,16 +11,25 @@ import logo from "../public/image/Logo-1.svg";
 import Sidebar from "./Sidebar";
 
 const Navbar = () => {
+  // Simulated user state; in a real app update this upon login
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [sidebarType, setSidebarType] = useState<"login" | "wishlist" | "cart" | "register" | null>(null);
+  const [sidebarType, setSidebarType] = useState<
+    "login" | "wishlist" | "cart" | "register" | "profile" | null
+  >(null);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
     document.body.style.overflow = !isMenuOpen ? "hidden" : "auto";
   };
 
-  const openLoginSidebar = () => {
-    setSidebarType("login");
+  const openUserSidebar = () => {
+    if (user) {
+      setSidebarType("profile");
+    } else {
+      setSidebarType("login");
+    }
     document.body.style.overflow = "hidden";
   };
 
@@ -77,10 +86,20 @@ const Navbar = () => {
             </div>
             {/* Icons and Mobile Menu Button */}
             <div className="flex items-center gap-4 md:gap-6">
-              <IoPersonOutline
-                onClick={openLoginSidebar}
-                className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
-              />
+              {user ? (
+                <div
+                  className="flex items-center gap-1 cursor-pointer"
+                  onClick={openUserSidebar}
+                >
+                  <span className="text-sm font-hanken">Hello, {user.name}</span>
+                  <IoPersonOutline className="w-5 h-5 hover:text-gray-600 transition-colors" />
+                </div>  
+              ) : (
+                <IoPersonOutline
+                  onClick={openUserSidebar}
+                  className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
+                />
+              )}
               <FaRegHeart
                 onClick={openWishlistSidebar}
                 className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
@@ -115,39 +134,19 @@ const Navbar = () => {
             className="fixed top-0 left-0 h-full w-3/4 max-w-sm bg-white/95 backdrop-blur-lg z-50 shadow-lg"
           >
             <div className="flex flex-col items-start p-8 space-y-6">
-              <Link
-                href="#"
-                className="text-xl hover:text-gray-600"
-                onClick={toggleMenu}
-              >
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
                 Home
               </Link>
-              <Link
-                href="#"
-                className="text-xl hover:text-gray-600"
-                onClick={toggleMenu}
-              >
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
                 Our Story
               </Link>
-              <Link
-                href="#"
-                className="text-xl hover:text-gray-600"
-                onClick={toggleMenu}
-              >
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
                 Products
               </Link>
-              <Link
-                href="#"
-                className="text-xl hover:text-gray-600"
-                onClick={toggleMenu}
-              >
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
                 Blog
               </Link>
-              <Link
-                href="#"
-                className="text-xl hover:text-gray-600"
-                onClick={toggleMenu}
-              >
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
                 Contacts
               </Link>
             </div>
@@ -174,14 +173,17 @@ const Navbar = () => {
                 ? "Cart"
                 : sidebarType === "register"
                 ? "Register Now"
+                : sidebarType === "profile"
+                ? "User Account"
                 : ""
             }
-            
             widthClass="w-3/4 max-w-md"
             contentType={sidebarType}
-            onContentTypeChange={(type: "login" | "register") =>
-              setSidebarType(type)
-            }
+            onContentTypeChange={(type: "login" | "register") => setSidebarType(type)}
+            onLoginSuccess={(user) => {
+              setUser(user);
+              closeSidebar();
+            }}
           />
         )}
       </AnimatePresence>
