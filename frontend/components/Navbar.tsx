@@ -1,3 +1,4 @@
+// frontend/components/Navbar.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -7,24 +8,29 @@ import { FaRegHeart } from "react-icons/fa";
 import { HiMiniShoppingBag } from "react-icons/hi2";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "../store";
 import logo from "../public/image/Logo-1.svg";
 import Sidebar from "./Sidebar";
+import { setUser, clearUser } from "../store/userSlice";
 
 const Navbar = () => {
-  // Rehydrate user state on mount.
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch<AppDispatch>();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarType, setSidebarType] = useState<
     "login" | "wishlist" | "cart" | "register" | "profile" | null
   >(null);
 
+  // Rehydrate user state from localStorage on mount.
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
     if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
+      dispatch(setUser(JSON.parse(storedUser)));
     }
-  }, []);
+  }, [dispatch]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -32,7 +38,6 @@ const Navbar = () => {
   };
 
   const openUserSidebar = () => {
-    // If user exists, show profile; otherwise, show login.
     if (user) {
       setSidebarType("profile");
     } else {
@@ -56,7 +61,6 @@ const Navbar = () => {
     document.body.style.overflow = "auto";
   };
 
-  // Mobile menu animation variants (slide from left)
   const menuVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
@@ -143,7 +147,10 @@ const Navbar = () => {
                 Contacts
               </Link>
             </div>
-            <button onClick={toggleMenu} className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none">
+            <button
+              onClick={toggleMenu}
+              className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none"
+            >
               <HiX className="h-8 w-8" />
             </button>
           </motion.div>
@@ -169,14 +176,18 @@ const Navbar = () => {
             }
             widthClass="w-3/4 max-w-md"
             contentType={sidebarType}
-            user={user}
+            user={user || undefined}
             onContentTypeChange={(type: "login" | "register") => setSidebarType(type)}
-            onLoginSuccess={(user) => {
-              setUser(user);
+            onLoginSuccess={(userData) => {
+              dispatch(setUser(userData));
+              localStorage.setItem("user", JSON.stringify(userData));
               closeSidebar();
             }}
             onLogoutSuccess={() => {
-              setUser(null);
+              dispatch(clearUser());
+              localStorage.removeItem("user");
+              localStorage.removeItem("token");
+              // Change the sidebar content to login view immediately after logout.
               setSidebarType("login");
             }}
           />

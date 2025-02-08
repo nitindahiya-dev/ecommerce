@@ -22,7 +22,7 @@ app.use(express.json());
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 // Registration endpoint
-app.post("/api/register", async (req: Request, res: Response) => {
+app.post("/api/register", async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password } = req.body;
 
@@ -32,7 +32,7 @@ app.post("/api/register", async (req: Request, res: Response) => {
       .from(users)
       .where(eq(users.email, email));
     if (existingUsers.length > 0) {
-      res.status(400).json({ message: "User already exists" });
+      void res.status(400).json({ message: "User already exists" });
       return;
     }
 
@@ -49,17 +49,17 @@ app.post("/api/register", async (req: Request, res: Response) => {
       })
       .returning();
 
-    res.status(201).json({ message: "User registered successfully", user: newUser });
+    void res.status(201).json({ message: "User registered successfully", user: newUser });
     return;
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    void res.status(500).json({ message: "Internal server error" });
     return;
   }
 });
 
 // Login endpoint
-app.post("/api/login", async (req: Request, res: Response) => {
+app.post("/api/login", async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
 
@@ -69,7 +69,7 @@ app.post("/api/login", async (req: Request, res: Response) => {
       .from(users)
       .where(eq(users.email, email));
     if (foundUsers.length === 0) {
-      res.status(401).json({ message: "Invalid credentials" });
+      void res.status(401).json({ message: "Invalid credentials" });
       return;
     }
 
@@ -78,48 +78,105 @@ app.post("/api/login", async (req: Request, res: Response) => {
     // Compare the provided password with the stored hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      res.status(401).json({ message: "Invalid credentials" });
+      void res.status(401).json({ message: "Invalid credentials" });
       return;
     }
 
     // Generate a JWT token (set an appropriate expiration)
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
 
-    res.status(200).json({ message: "Login successful", token });
+    void res.status(200).json({ message: "Login successful", token });
     return;
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    void res.status(500).json({ message: "Internal server error" });
     return;
   }
 });
 
-
 // Fetch all users endpoint
-app.get("/api/users", async (req: Request, res: Response) => {
+app.get("/api/users", async (req: Request, res: Response): Promise<void> => {
   try {
     const allUsers = await db
       .select()
       .from(users);
-
-    res.status(200).json(allUsers);
+    void res.status(200).json(allUsers);
   } catch (error) {
     console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Internal server error" });
+    void res.status(500).json({ message: "Internal server error" });
   }
 });
 
+// Update Profile endpoint
+app.put("/api/update-profile", async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Expecting the request body to include:
+    // id, name, email, and optionally currentPassword and newPassword
+    const { id, name, email, currentPassword, newPassword } = req.body;
+    if (!id) {
+      void res.status(400).json({ message: "User ID is required" });
+      return;
+    }
 
-app.post("/api/logout", (req: Request, res: Response) => {
-  // Clear the cookie named "token" (adjust the cookie name if needed)
-  res.clearCookie("token", { httpOnly: true });
-  res.status(200).json({ message: "Logged out successfully" });
+    // Find the user by id
+    const foundUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, id));
+    if (foundUsers.length === 0) {
+      void res.status(404).json({ message: "User not found" });
+      return;
+    }
+    const user = foundUsers[0];
+
+    // Initialize the password to remain unchanged
+    let updatedPassword = user.password;
+
+    // If a new password is provided, then currentPassword must be provided and valid
+    if (newPassword) {
+      if (!currentPassword) {
+        void res.status(400).json({ message: "Current password is required to change password" });
+        return;
+      }
+      const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!passwordMatch) {
+        void res.status(401).json({ message: "Current password is incorrect" });
+        return;
+      }
+      // Hash the new password
+      updatedPassword = await bcrypt.hash(newPassword, 10);
+    }
+
+    // Update the user's details
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        name,
+        email,
+        password: updatedPassword,
+      })
+      .where(eq(users.id, id))
+      .returning();
+
+    void res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
+    return;
+  } catch (error) {
+    console.error("Update profile error:", error);
+    void res.status(500).json({ message: "Internal server error" });
+    return;
+  }
 });
 
+// Logout endpoint
+app.post("/api/logout", (req: Request, res: Response): void => {
+  // Clear the cookie named "token" (adjust the cookie name if needed)
+  res.clearCookie("token", { httpOnly: true });
+  void res.status(200).json({ message: "Logged out successfully" });
+});
 
 // Test endpoint to verify the API is running
-app.get("/api", (req: Request, res: Response) => {
-  res.json({ message: "E-commerce API is running" });
+app.get("/api", (req: Request, res: Response): void => {
+  void res.json({ message: "E-commerce API is running" });
 });
 
 const PORT = process.env.PORT || 5000;

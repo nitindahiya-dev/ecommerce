@@ -1,3 +1,4 @@
+// frontend/components/Profile.tsx
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "./PrimaryButton";
@@ -34,22 +35,18 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (showPasswordFields && formData.newPassword !== formData.confirmPassword) {
       toast.error("New passwords don't match");
       return;
     }
-
     try {
-      // API call to update user details (if applicable)
-      const res = await fetch("/api/update-profile", {
+      // Assume API call here for updating profile
+        const res = await fetch("/api/update-profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
       if (!res.ok) throw new Error("Update failed");
-
       toast.success("Profile updated successfully");
       setIsEditing(false);
       setShowPasswordFields(false);
@@ -61,12 +58,10 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   const handleLogout = async () => {
     try {
-      // Call logout API endpoint if applicable
       await fetch("http://localhost:5000/api/logout", { method: "POST" });
       toast.success("Logged out successfully");
-      localStorage.removeItem("token");
       localStorage.removeItem("user");
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
       onLogoutSuccess?.();
     } catch (error) {
       toast.error("Error logging out");
@@ -76,6 +71,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   return (
     <div className="space-y-6">
+      {/* Profile Picture */}
       <div className="relative group text-center">
         <div className="relative inline-block">
           <Image
@@ -93,6 +89,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
           )}
         </div>
       </div>
+      {/* Profile Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
