@@ -1,3 +1,4 @@
+// components/Login.tsx
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "./PrimaryButton";
@@ -30,16 +31,26 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) =>
       } else {
         toast.success("Login successful");
         console.log("Login successful", data.token);
-        // Store token based on "Remember me" checkbox
+        // Store token persistently if "Remember me" is checked.
         if (remember) {
           localStorage.setItem("token", data.token);
         } else {
           sessionStorage.setItem("token", data.token);
         }
-        // For demonstration, derive user name from email (in real apps, fetch user info)
+        // Derive a user object from the email for demonstration.
         const userName = email.split("@")[0];
+        // Inside Login.tsx, after a successful login:
+        const userData = { name: userName, email };
+        localStorage.setItem("user", JSON.stringify(userData));
+        if (remember) {
+          localStorage.setItem("token", data.token);
+        } else {
+          sessionStorage.setItem("token", data.token);
+        }
+        // Save user info in localStorage for persistent login.
+        localStorage.setItem("user", JSON.stringify(userData));
         if (onLoginSuccess) {
-          onLoginSuccess({ name: userName, email });
+          onLoginSuccess(userData);
         }
       }
     } catch (err) {
@@ -92,7 +103,6 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) =>
         </label>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      {/* Use PrimaryButton as a submit button */}
       <PrimaryButton text="Login" type="submit" className="w-full" />
       <div className="flex items-center justify-between">
         <a href="#" className="text-sm text-[var(--primary)] hover:underline font-hanken">

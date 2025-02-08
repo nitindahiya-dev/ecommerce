@@ -11,13 +11,14 @@ import Profile from "./Profile";
 export interface SidebarProps {
   onClose: () => void;
   title?: string;
-  // Updated union to include "profile"
   contentType: "login" | "wishlist" | "cart" | "register" | "profile";
   children?: React.ReactNode;
   widthClass?: string;
   overlayClassName?: string;
   onContentTypeChange?: (type: "login" | "register") => void;
   onLoginSuccess?: (user: { name: string; email: string }) => void;
+  onLogoutSuccess?: () => void;
+  user?: { name: string; email: string } | null;
 }
 
 const overlayVariants = {
@@ -40,6 +41,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   overlayClassName = "bg-black/30",
   onContentTypeChange,
   onLoginSuccess,
+  onLogoutSuccess,
+  user,
 }) => {
   return (
     <AnimatePresence>
@@ -67,24 +70,27 @@ const Sidebar: React.FC<SidebarProps> = ({
               <HiX className="h-6 w-6" />
             </button>
           </div>
-          {contentType === "login" && (
+          {contentType === "profile" ? (
+            user ? (
+              <Profile onLogoutSuccess={onLogoutSuccess} user={user} />
+            ) : (
+              <Login
+                onContentTypeChange={() => onContentTypeChange && onContentTypeChange("register")}
+                onLoginSuccess={onLoginSuccess}
+              />
+            )
+          ) : contentType === "login" ? (
             <Login
-              onContentTypeChange={() =>
-                onContentTypeChange && onContentTypeChange("register")
-              }
+              onContentTypeChange={() => onContentTypeChange && onContentTypeChange("register")}
               onLoginSuccess={onLoginSuccess}
             />
-          )}
-          {contentType === "register" && (
-            <Register
-              onContentTypeChange={() =>
-                onContentTypeChange && onContentTypeChange("login")
-              }
-            />
-          )}
-          {contentType === "wishlist" && <WishList />}
-          {contentType === "cart" && <Cart />}
-          {contentType === "profile" && <Profile />}
+          ) : contentType === "register" ? (
+            <Register onContentTypeChange={() => onContentTypeChange && onContentTypeChange("login")} />
+          ) : contentType === "wishlist" ? (
+            <WishList />
+          ) : contentType === "cart" ? (
+            <Cart />
+          ) : null}
           {children}
         </motion.div>
       </motion.div>

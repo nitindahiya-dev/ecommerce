@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IoPersonOutline } from "react-icons/io5";
@@ -11,13 +11,20 @@ import logo from "../public/image/Logo-1.svg";
 import Sidebar from "./Sidebar";
 
 const Navbar = () => {
-  // Simulated user state; in a real app update this upon login
+  // Rehydrate user state on mount.
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarType, setSidebarType] = useState<
     "login" | "wishlist" | "cart" | "register" | "profile" | null
   >(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -25,6 +32,7 @@ const Navbar = () => {
   };
 
   const openUserSidebar = () => {
+    // If user exists, show profile; otherwise, show login.
     if (user) {
       setSidebarType("profile");
     } else {
@@ -48,6 +56,7 @@ const Navbar = () => {
     document.body.style.overflow = "auto";
   };
 
+  // Mobile menu animation variants (slide from left)
   const menuVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
@@ -87,36 +96,20 @@ const Navbar = () => {
             {/* Icons and Mobile Menu Button */}
             <div className="flex items-center gap-4 md:gap-6">
               {user ? (
-                <div
-                  className="flex items-center gap-1 cursor-pointer"
-                  onClick={openUserSidebar}
-                >
+                <div className="flex items-center gap-1 cursor-pointer" onClick={openUserSidebar}>
                   <span className="text-sm font-hanken">Hello, {user.name}</span>
                   <IoPersonOutline className="w-5 h-5 hover:text-gray-600 transition-colors" />
-                </div>  
+                </div>
               ) : (
                 <IoPersonOutline
                   onClick={openUserSidebar}
                   className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
                 />
               )}
-              <FaRegHeart
-                onClick={openWishlistSidebar}
-                className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors"
-              />
-              <HiMiniShoppingBag
-                onClick={openCartSidebar}
-                className="w-6 h-6 hover:text-gray-600 cursor-pointer transition-colors"
-              />
-              <button
-                onClick={toggleMenu}
-                className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none"
-              >
-                {isMenuOpen ? (
-                  <HiX className="h-6 w-6" />
-                ) : (
-                  <HiOutlineMenu className="h-6 w-6" />
-                )}
+              <FaRegHeart onClick={openWishlistSidebar} className="w-5 h-5 hover:text-gray-600 cursor-pointer transition-colors" />
+              <HiMiniShoppingBag onClick={openCartSidebar} className="w-6 h-6 hover:text-gray-600 cursor-pointer transition-colors" />
+              <button onClick={toggleMenu} className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none">
+                {isMenuOpen ? <HiX className="h-6 w-6" /> : <HiOutlineMenu className="h-6 w-6" />}
               </button>
             </div>
           </div>
@@ -150,16 +143,13 @@ const Navbar = () => {
                 Contacts
               </Link>
             </div>
-            <button
-              onClick={toggleMenu}
-              className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none"
-            >
+            <button onClick={toggleMenu} className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none">
               <HiX className="h-8 w-8" />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Sidebar for Person/Heart/Cart Icons */}
+      {/* Sidebar for icons */}
       <AnimatePresence>
         {sidebarType && (
           <Sidebar
@@ -179,10 +169,15 @@ const Navbar = () => {
             }
             widthClass="w-3/4 max-w-md"
             contentType={sidebarType}
+            user={user}
             onContentTypeChange={(type: "login" | "register") => setSidebarType(type)}
             onLoginSuccess={(user) => {
               setUser(user);
               closeSidebar();
+            }}
+            onLogoutSuccess={() => {
+              setUser(null);
+              setSidebarType("login");
             }}
           />
         )}

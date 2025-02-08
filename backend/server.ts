@@ -94,6 +94,29 @@ app.post("/api/login", async (req: Request, res: Response) => {
   }
 });
 
+
+// Fetch all users endpoint
+app.get("/api/users", async (req: Request, res: Response) => {
+  try {
+    const allUsers = await db
+      .select()
+      .from(users);
+
+    res.status(200).json(allUsers);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+app.post("/api/logout", (req: Request, res: Response) => {
+  // Clear the cookie named "token" (adjust the cookie name if needed)
+  res.clearCookie("token", { httpOnly: true });
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
+
 // Test endpoint to verify the API is running
 app.get("/api", (req: Request, res: Response) => {
   res.json({ message: "E-commerce API is running" });

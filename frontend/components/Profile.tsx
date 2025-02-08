@@ -41,12 +41,10 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
     }
 
     try {
-      // Add your API call here to update user details
+      // API call to update user details (if applicable)
       const res = await fetch("/api/update-profile", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -63,9 +61,12 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   const handleLogout = async () => {
     try {
-      // Add your logout API call here
-      await fetch("/api/logout");
+      // Call logout API endpoint if applicable
+      await fetch("http://localhost:5000/api/logout", { method: "POST" });
       toast.success("Logged out successfully");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
       onLogoutSuccess?.();
     } catch (error) {
       toast.error("Error logging out");
@@ -75,7 +76,6 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   return (
     <div className="space-y-6">
-      {/* Profile Picture Section */}
       <div className="relative group text-center">
         <div className="relative inline-block">
           <Image
@@ -88,19 +88,12 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
           {isEditing && (
             <label className="absolute bottom-0 right-0 bg-[var(--primary)] p-2 rounded-full cursor-pointer">
               <HiCamera className="text-white" />
-              <input
-                type="file"
-                className="hidden"
-                onChange={(e) => console.log(e.target.files)} // Add your image upload logic
-              />
+              <input type="file" className="hidden" onChange={(e) => console.log(e.target.files)} />
             </label>
           )}
         </div>
       </div>
-
-      {/* Profile Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name Field */}
         <div>
           <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
             Username: {user?.name}
@@ -117,8 +110,6 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
             <p className="p-2 bg-gray-100 rounded-md">{formData.name}</p>
           )}
         </div>
-
-        {/* Email Field */}
         <div>
           <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
             Email: {user?.email}
@@ -135,8 +126,6 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
             <p className="p-2 bg-gray-100 rounded-md">{formData.email}</p>
           )}
         </div>
-
-        {/* Password Fields */}
         {isEditing && (
           <div className="space-y-4">
             {!showPasswordFields ? (
@@ -160,7 +149,6 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
                     className="w-full p-2 border rounded-md"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
                     New Password
@@ -173,7 +161,6 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
                     className="w-full p-2 border rounded-md"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
                     Confirm New Password
@@ -190,15 +177,9 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
             )}
           </div>
         )}
-
-        {/* Action Buttons */}
         {isEditing ? (
           <div className="flex gap-2">
-            <PrimaryButton
-              text="Save Changes"
-              type="submit"
-              className="w-full"
-            />
+            <PrimaryButton text="Save Changes" type="submit" className="w-full" />
             <PrimaryButton
               text="Cancel"
               type="button"
@@ -220,8 +201,6 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
           />
         )}
       </form>
-
-      {/* Logout Button */}
       <PrimaryButton
         text="Logout"
         type="button"

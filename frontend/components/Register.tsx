@@ -109,7 +109,6 @@ const Register: React.FC<RegisterProps> = ({ onContentTypeChange }) => {
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <PrimaryButton text="Register" type="submit" className="w-full" />
       </form>
-
       <div className="flex items-center justify-center mb-4">
         <button
           type="button"
