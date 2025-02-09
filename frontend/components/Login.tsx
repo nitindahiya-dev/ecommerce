@@ -1,12 +1,12 @@
-// components/Login.tsx
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "./PrimaryButton";
 import { toast } from "react-toastify";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface LoginProps {
   onContentTypeChange?: () => void;
-  onLoginSuccess?: (user: { name: string; email: string }) => void;
+  onLoginSuccess?: (user: { id: number; name: string; email: string }) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) => {
@@ -14,6 +14,7 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) =>
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,24 +31,14 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) =>
         toast.error(data.message || "Login failed");
       } else {
         toast.success("Login successful");
-        console.log("Login successful", data.token);
         // Store token persistently if "Remember me" is checked.
         if (remember) {
           localStorage.setItem("token", data.token);
         } else {
           sessionStorage.setItem("token", data.token);
         }
-        // Derive a user object from the email for demonstration.
-        const userName = email.split("@")[0];
-        // Inside Login.tsx, after a successful login:
-        const userData = { name: userName, email };
-        localStorage.setItem("user", JSON.stringify(userData));
-        if (remember) {
-          localStorage.setItem("token", data.token);
-        } else {
-          sessionStorage.setItem("token", data.token);
-        }
-        // Save user info in localStorage for persistent login.
+        // Use the returned user object directly.
+        const userData = data.user; // now contains id, name, email
         localStorage.setItem("user", JSON.stringify(userData));
         if (onLoginSuccess) {
           onLoginSuccess(userData);
@@ -64,7 +55,7 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) =>
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="username" className="block font-hanken text-sm font-medium text-gray-700">
-          Username or Email
+          Email
         </label>
         <input
           type="text"
@@ -76,19 +67,28 @@ const Login: React.FC<LoginProps> = ({ onContentTypeChange, onLoginSuccess }) =>
           required
         />
       </div>
-      <div>
+      <div className="relative">
         <label htmlFor="password" className="block text-sm font-hanken font-medium text-gray-700">
           Password
         </label>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full border font-hanken border-gray-300 rounded-md p-2"
+          className="mt-1 block w-full border font-hanken border-gray-300 rounded-md p-2 pr-10"
           placeholder="Enter your password"
           required
         />
+        <div className="absolute inset-y-0 top-5 right-0 pr-3 flex items-center">
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="text-gray-500 focus:outline-none"
+          >
+            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+          </button>
+        </div>
       </div>
       <div className="flex items-center">
         <input

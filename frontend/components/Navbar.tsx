@@ -37,6 +37,7 @@ const Navbar = () => {
     document.body.style.overflow = !isMenuOpen ? "hidden" : "auto";
   };
 
+  // Open sidebar: if user exists, show profile; otherwise, show login.
   const openUserSidebar = () => {
     if (user) {
       setSidebarType("profile");
@@ -61,6 +62,7 @@ const Navbar = () => {
     document.body.style.overflow = "auto";
   };
 
+  // Mobile menu animation variants (slide from left)
   const menuVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
@@ -147,10 +149,7 @@ const Navbar = () => {
                 Contacts
               </Link>
             </div>
-            <button
-              onClick={toggleMenu}
-              className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none"
-            >
+            <button onClick={toggleMenu} className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none">
               <HiX className="h-8 w-8" />
             </button>
           </motion.div>
@@ -179,6 +178,7 @@ const Navbar = () => {
             user={user || undefined}
             onContentTypeChange={(type: "login" | "register") => setSidebarType(type)}
             onLoginSuccess={(userData) => {
+              // Save to Redux and localStorage
               dispatch(setUser(userData));
               localStorage.setItem("user", JSON.stringify(userData));
               closeSidebar();
@@ -187,7 +187,7 @@ const Navbar = () => {
               dispatch(clearUser());
               localStorage.removeItem("user");
               localStorage.removeItem("token");
-              // Change the sidebar content to login view immediately after logout.
+              // Immediately switch sidebar to the login view after logout.
               setSidebarType("login");
             }}
           />

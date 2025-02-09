@@ -16,10 +16,11 @@ export interface SidebarProps {
   widthClass?: string;
   overlayClassName?: string;
   onContentTypeChange?: (type: "login" | "register") => void;
-  onLoginSuccess?: (user: { name: string; email: string }) => void;
+  onLoginSuccess?: (user: { id: number; name: string; email: string }) => void;
   onLogoutSuccess?: () => void;
-  user?: { name: string; email: string } | null;
+  user?: { id: number; name: string; email: string } | null;
 }
+
 
 const overlayVariants = {
   hidden: { opacity: 0 },

@@ -62,30 +62,19 @@ app.post("/api/register", async (req: Request, res: Response): Promise<void> => 
 app.post("/api/login", async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
-
-    // Find the user by email
-    const foundUsers = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const foundUsers = await db.select().from(users).where(eq(users.email, email));
     if (foundUsers.length === 0) {
       void res.status(401).json({ message: "Invalid credentials" });
       return;
     }
-
     const user = foundUsers[0];
-
-    // Compare the provided password with the stored hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       void res.status(401).json({ message: "Invalid credentials" });
       return;
     }
-
-    // Generate a JWT token (set an appropriate expiration)
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
-
-    void res.status(200).json({ message: "Login successful", token });
+    void res.status(200).json({ message: "Login successful", token, user });
     return;
   } catch (error) {
     console.error("Login error:", error);
@@ -93,6 +82,8 @@ app.post("/api/login", async (req: Request, res: Response): Promise<void> => {
     return;
   }
 });
+
+
 
 // Fetch all users endpoint
 app.get("/api/users", async (req: Request, res: Response): Promise<void> => {

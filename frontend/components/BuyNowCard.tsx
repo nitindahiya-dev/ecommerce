@@ -4,14 +4,15 @@ import { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
 
 interface BuyNowCardProps {
-  productImage: string | StaticImageData;
-  productImageHover: string | StaticImageData;
+  productImage: string | StaticImageData | undefined;
+  productImageHover: string | StaticImageData | undefined;
   title: string;
   price: number | string;
   sizes?: string[];
   buttonHref?: string;
   isNew?: boolean;
 }
+
 
 const BuyNowCard = ({
   productImage,
@@ -26,8 +27,14 @@ const BuyNowCard = ({
   const [isHovered, setIsHovered] = useState(false);
   const formattedPrice = typeof price === "number" ? price.toFixed(2) : price;
 
-  const getImageSrc = (img: string | StaticImageData): string =>
-    typeof img === "string" ? img : img.src;
+  const getImageSrc = (img: string | StaticImageData | undefined): string => {
+    if (!img) {
+      // Return a fallback image URL or an empty string
+      return "/path/to/placeholder.jpg"; // <-- Replace with your fallback image if needed
+      // Or simply: return "";
+    }
+    return typeof img === "string" ? img : img.src;
+  };
 
   useEffect(() => {
     setLoaded(true);
@@ -76,7 +83,7 @@ const BuyNowCard = ({
           <h4 className="font-unbounded text-xl font-medium text-gray-900 dark:text-gray-100">
             {title}
           </h4>
-          
+
           <p className="font-hanken text-2xl text-emerald-600 dark:text-emerald-400 font-semibold">
             ${formattedPrice}
           </p>

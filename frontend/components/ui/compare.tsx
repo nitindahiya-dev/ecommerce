@@ -213,6 +213,7 @@ export const Compare: React.FC<CompareProps> = ({
             >
               <Image
                 alt="first image"
+                loading="lazy"
                 src={firstImage}
                 className={cn(
                   "absolute inset-0 z-20 rounded-2xl flex-shrink-0 w-full h-full select-none",

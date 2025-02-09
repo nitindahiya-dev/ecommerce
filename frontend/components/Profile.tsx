@@ -1,4 +1,4 @@
-// frontend/components/Profile.tsx
+// Profile.tsx
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "./PrimaryButton";
@@ -10,10 +10,12 @@ import afterImage from "../public/image/after.jpg";
 interface ProfileProps {
   onLogoutSuccess?: () => void;
   user?: {
+    id: number;
     name: string;
     email: string;
   };
 }
+
 
 const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -40,12 +42,19 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
       return;
     }
     try {
-      // Assume API call here for updating profile
-        const res = await fetch("/api/update-profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      // Include the user ID in the payload
+      const payload = {
+        id: user?.id, // make sure user?.id exists!
+        ...formData,
+      };
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/update-profile`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       if (!res.ok) throw new Error("Update failed");
       toast.success("Profile updated successfully");
       setIsEditing(false);
@@ -58,7 +67,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5000/api/logout", { method: "POST" });
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/logout`, { method: "POST" });
       toast.success("Logged out successfully");
       localStorage.removeItem("user");
       localStorage.removeItem("token");
@@ -71,7 +80,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   return (
     <div className="space-y-6">
-      {/* Profile Picture */}
+      {/* Profile Picture Section */}
       <div className="relative group text-center">
         <div className="relative inline-block">
           <Image
@@ -89,11 +98,12 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
           )}
         </div>
       </div>
+
       {/* Profile Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
-            Username: {user?.name}
+            Username
           </label>
           {isEditing ? (
             <input
@@ -109,7 +119,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
         </div>
         <div>
           <label className="block text-sm font-hanken font-medium text-gray-700 mb-1">
-            Email: {user?.email}
+            Email
           </label>
           {isEditing ? (
             <input
