@@ -15,6 +15,8 @@ import CountUp from "react-countup";
 import { Compare } from "../components/ui/compare";
 import Footer from "../components/Footer";
 import BuyNowCard from "../components/BuyNowCard";
+import { HiArrowRight, HiSparkles } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 interface Product {
   id: number;
@@ -125,7 +127,7 @@ export default function Home() {
             dynamicHeight={true}
             autoPlay={true}
           >
-            <Image src={carouselImage1} loading="lazy" alt="carousel image 1" />
+            <Image src={carouselImage1} alt="carousel image 1" priority />
             <Image src={carouselImage2} loading="lazy" alt="carousel image 2" />
           </Carousel>
         </div>
@@ -179,10 +181,10 @@ export default function Home() {
           />
           <div className="flex justify-between bottom-5 left-5 right-5 absolute z-20">
             <p className="bg-[var(--background)] text font-unbounded font-bold px-5 py-2 tracking-widest sm:text-lg">
-              Before
+              After
             </p>
             <p className="bg-[var(--background)] font-unbounded font-bold px-5 py-2 tracking-widest sm:text-lg">
-              After
+              Before
             </p>
           </div>
         </div>
@@ -190,34 +192,74 @@ export default function Home() {
       {/* Transformation Gallery End */}
 
       {/* Latest Collection Section */}
-      <div className="flex items-center flex-col mb-10 sm:mb-32 justify-center sm:gap-10 max-w-[85vw] mx-auto">
-        <h2 className="text-2xl sm:text-5xl font-unbounded mb-10">New Arrivals</h2>
-        <div className="flex gap-10">
-          <div className="flex w-full flex-col sm:flex-row gap-10">
-            <div className="flex items-center flex-col gap-3 sm:gap-5">
-              <Image loading="lazy" src={latestImage1} alt="Plant Image" className="w-full rounded-3xl" />
-              <p className="font-unbounded font-semi text-xl sm:text-2xl pt-5">Air Purifying Plants</p>
-              <span className="font-hanken font-thin text-xl text-center">
-                Breathe easy with houseplants that clean the air in your house.
-              </span>
-            </div>
-            <div className="flex items-center flex-col gap-3 sm:gap-5">
-              <Image loading="lazy" src={latestImage2} alt="Plant Image" className="w-full rounded-3xl" />
-              <p className="font-unbounded font-semi text-xl sm:text-2xl pt-5">Air Purifying Plants</p>
-              <span className="font-hanken font-thin text-xl text-center">
-                Breathe easy with houseplants that clean the air in your house.
-              </span>
-            </div>
-            <div className="flex items-center flex-col gap-3 sm:gap-5">
-              <Image loading="lazy" src={latestImage1} alt="Plant Image" className="w-full rounded-3xl" />
-              <p className="font-unbounded font-semi text-xl sm:text-2xl pt-5">Air Purifying Plants</p>
-              <span className="font-hanken font-thin text-xl text-center">
-                Breathe easy with houseplants that clean the air in your house.
-              </span>
-            </div>
+      <section className="py-16 bg-gradient-to-b from-green-50/20 to-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14 lg:mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-unbounded font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+              New Arrivals
+            </h2>
+            <p className="mt-4 font-hanken text-lg text-gray-600 max-w-2xl mx-auto">
+              {`Discover our freshest botanical additions - carefully curated to bring nature's beauty to your space`}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+            {[latestImage1, latestImage2, latestImage1].map((img, index) => (
+              <motion.div
+                key={index}
+                className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="relative h-96 overflow-hidden">
+                  <Image
+                    src={img}
+                    alt={`New arrival plant ${index + 1}`}
+                    className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+                    placeholder="blur"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="font-unbounded text-2xl mb-2 drop-shadow-md">
+                    {[
+                      'Air Purifying Plants',
+                      'Low-Light Champions',
+                      'Pet-Friendly Greens'
+                    ][index]}
+                  </h3>
+                  <p className="font-hanken text-lg opacity-90 mb-4">
+                    {[
+                      'Natural air filters for healthier living spaces',
+                      'Thrives in any light condition',
+                      'Safe and beautiful for furry friends'
+                    ][index]}
+                  </p>
+                  <button className="flex items-center gap-2 text-green-100 hover:text-white transition-colors">
+                    <span className="font-semibold">Explore Collection</span>
+                    <HiArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="absolute top-4 right-4">
+                  <span className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-sm font-hanken font-medium text-emerald-700">
+                    New Arrival
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <button className="bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3 rounded-full font-unbounded transition-colors duration-300 flex items-center gap-2 mx-auto">
+              <HiSparkles className="w-5 h-5" />
+              View All Collections
+              <HiArrowRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
-      </div>
+      </section>
       {/* Latest Collection End */}
 
       {/* Footer Start */}

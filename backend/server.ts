@@ -1,11 +1,15 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import cors from "cors";
+import nodemailer from 'nodemailer';
+import cors from 'cors';
 import { initDb, db } from "./src/db";
 import { users } from "./src/schema";
 import { eq } from "drizzle-orm/expressions";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendResetEmail } from "./src/mailer";
+import { RequestHandler } from "express";
+
 
 dotenv.config();
 
@@ -14,30 +18,17 @@ const app = express();
 // Initialize database (using drizzle with pg Pool)
 initDb();
 
-// Define an array of allowed origins
-const allowedOrigins = [
-  "https://ecommerce-j22k.vercel.app",
-  "http://192.168.1.9:3001",
-];
-
 // Configure CORS with a dynamic origin function
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, etc.)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        // Origin is allowed
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true, // Allow cookies and authorization headers if needed
-  })
-);
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL_PROD
+    : process.env.FRONTEND_URL_DEV,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
@@ -139,6 +130,68 @@ app.put("/api/update-profile", async (req: Request, res: Response): Promise<void
 app.post("/api/logout", (req: Request, res: Response): void => {
   res.clearCookie("token", { httpOnly: true });
   res.status(200).json({ message: "Logged out successfully" });
+});
+
+app.post(
+  "/api/forgot-password",
+  (async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { email } = req.body;
+      // Find the user
+      const [user] = await db.select().from(users).where(eq(users.email, email));
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+      // Generate a reset token (you can include additional info as needed)
+      const resetToken = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+
+      // Store the token in the database (make sure your schema has a column for it)
+      // If you haven’t already added the column, you need to alter your table:
+      //   ALTER TABLE users ADD COLUMN reset_token TEXT;
+      await db.update(users)
+        .set({ resetToken }) // Note: If your column name is different (e.g. `reset_token`), adjust accordingly.
+        .where(eq(users.id, user.id));
+
+      // Send the reset email
+      await sendResetEmail(email, resetToken);
+
+      res.status(200).json({ message: "Reset instructions sent" });
+    } catch (error) {
+      console.error("Password reset error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }) as RequestHandler
+);
+
+
+app.post("/api/reset-password", async (req: Request, res: Response) => {
+  try {
+    const { token, email, newPassword } = req.body;
+    const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
+    if (decoded.email !== email) {
+      res.status(400).json({ message: "Invalid token" });
+      return;
+    }
+    const foundUsers = await db.select().from(users).where(eq(users.email, email));
+    if (foundUsers.length === 0) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    const user = foundUsers[0];
+    if (user.resetToken !== token) {
+      res.status(400).json({ message: "Invalid token" });
+      return;
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await db.update(users)
+      .set({ password: hashedPassword, resetToken: null })
+      .where(eq(users.id, user.id));
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
 });
 
 // Test endpoint

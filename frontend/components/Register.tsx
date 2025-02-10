@@ -1,11 +1,12 @@
-// components/Register.tsx
+// frontend/components/Register.tsx
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "./PrimaryButton";
 import { toast } from "react-toastify";
+import { baseURL } from "@/config";
 
 interface RegisterProps {
-  onContentTypeChange?: () => void;
+  onContentTypeChange?: (type: "login" | "register" | "forgetPassword") => void;
 }
 
 const Register: React.FC<RegisterProps> = ({ onContentTypeChange }) => {
@@ -26,7 +27,7 @@ const Register: React.FC<RegisterProps> = ({ onContentTypeChange }) => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/register", {
+      const res = await fetch(`${baseURL}/api/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -37,8 +38,9 @@ const Register: React.FC<RegisterProps> = ({ onContentTypeChange }) => {
         toast.error(data.message || "Registration failed");
       } else {
         toast.success("Registration successful");
-        console.log("Registration successful", data);
-        if (onContentTypeChange) onContentTypeChange();
+        if (onContentTypeChange) {
+          onContentTypeChange("login");
+        }
       }
     } catch (err) {
       console.error("Registration error", err);
@@ -112,11 +114,14 @@ const Register: React.FC<RegisterProps> = ({ onContentTypeChange }) => {
       <div className="flex items-center justify-center mb-4">
         <button
           type="button"
-          onClick={onContentTypeChange}
+          onClick={() => {
+            if (onContentTypeChange) onContentTypeChange("login");
+          }}
           className="text-sm text-[var(--primary)] hover:underline font-hanken"
         >
           Already have an account? Login
         </button>
+
       </div>
       <PrimaryButton
         text="Login with Google"

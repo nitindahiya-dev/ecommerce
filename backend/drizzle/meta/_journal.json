@@ -8,6 +8,13 @@
       "when": 1739001780512,
       "tag": "0000_unknown_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739116313180,
+      "tag": "0001_wise_kree",
+      "breakpoints": true
     }
   ]
 }

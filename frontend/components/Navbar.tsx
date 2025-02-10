@@ -15,15 +15,13 @@ import Sidebar from "./Sidebar";
 import { setUser, clearUser } from "../store/userSlice";
 
 const Navbar = () => {
+  // IMPORTANT: Include "forgetPassword" in the union!
+  const [sidebarType, setSidebarType] = useState<"login" | "register" | "wishlist" | "cart" | "profile" | "forgetPassword" | null>(null);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [sidebarType, setSidebarType] = useState<
-    "login" | "wishlist" | "cart" | "register" | "profile" | null
-  >(null);
-
-  // Rehydrate user state from localStorage on mount.
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
@@ -37,13 +35,8 @@ const Navbar = () => {
     document.body.style.overflow = !isMenuOpen ? "hidden" : "auto";
   };
 
-  // Open sidebar: if user exists, show profile; otherwise, show login.
   const openUserSidebar = () => {
-    if (user) {
-      setSidebarType("profile");
-    } else {
-      setSidebarType("login");
-    }
+    setSidebarType(user ? "profile" : "login");
     document.body.style.overflow = "hidden";
   };
 
@@ -62,7 +55,6 @@ const Navbar = () => {
     document.body.style.overflow = "auto";
   };
 
-  // Mobile menu animation variants (slide from left)
   const menuVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
@@ -83,21 +75,11 @@ const Navbar = () => {
             </div>
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:space-x-8">
-              <Link href="#" className="hover:text-gray-600 transition-colors">
-                Home
-              </Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">
-                Our Story
-              </Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">
-                Products
-              </Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">
-                Blog
-              </Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">
-                Contacts
-              </Link>
+              <Link href="#" className="hover:text-gray-600 transition-colors">Home</Link>
+              <Link href="#" className="hover:text-gray-600 transition-colors">Our Story</Link>
+              <Link href="#" className="hover:text-gray-600 transition-colors">Products</Link>
+              <Link href="#" className="hover:text-gray-600 transition-colors">Blog</Link>
+              <Link href="#" className="hover:text-gray-600 transition-colors">Contacts</Link>
             </div>
             {/* Icons and Mobile Menu Button */}
             <div className="flex items-center gap-4 md:gap-6">
@@ -133,21 +115,11 @@ const Navbar = () => {
             className="fixed top-0 left-0 h-full w-3/4 max-w-sm bg-white/95 backdrop-blur-lg z-50 shadow-lg"
           >
             <div className="flex flex-col items-start p-8 space-y-6">
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
-                Home
-              </Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
-                Our Story
-              </Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
-                Products
-              </Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
-                Blog
-              </Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>
-                Contacts
-              </Link>
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Home</Link>
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Our Story</Link>
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Products</Link>
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Blog</Link>
+              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Contacts</Link>
             </div>
             <button onClick={toggleMenu} className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none">
               <HiX className="h-8 w-8" />
@@ -155,7 +127,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Sidebar for icons */}
+      {/* Sidebar */}
       <AnimatePresence>
         {sidebarType && (
           <Sidebar
@@ -171,14 +143,17 @@ const Navbar = () => {
                 ? "Register Now"
                 : sidebarType === "profile"
                 ? "User Account"
+                : sidebarType === "forgetPassword"
+                ? "Forget Password"
                 : ""
             }
             widthClass="w-3/4 max-w-md"
             contentType={sidebarType}
             user={user || undefined}
-            onContentTypeChange={(type: "login" | "register") => setSidebarType(type)}
+            onContentTypeChange={(type: "login" | "register" | "forgetPassword") => {
+              setSidebarType(type);
+            }}
             onLoginSuccess={(userData) => {
-              // Save to Redux and localStorage
               dispatch(setUser(userData));
               localStorage.setItem("user", JSON.stringify(userData));
               closeSidebar();
@@ -187,7 +162,6 @@ const Navbar = () => {
               dispatch(clearUser());
               localStorage.removeItem("user");
               localStorage.removeItem("token");
-              // Immediately switch sidebar to the login view after logout.
               setSidebarType("login");
             }}
           />

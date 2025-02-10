@@ -6,6 +6,7 @@ export const users = pgTable('users', {
   name: text('name').notNull(),
   email: varchar('email', { length: 255 }).notNull().unique(),
   password: text('password').notNull(), // Hashed password
+  resetToken: text('reset_token'), // New column for reset token (nullable)
   createdAt: timestamp('created_at').defaultNow(),
 });
 

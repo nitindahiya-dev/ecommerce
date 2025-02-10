@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { HiPencil, HiCamera, HiLogout } from "react-icons/hi";
 import Image from "next/image";
 import afterImage from "../public/image/after.jpg";
+import { baseURL } from "@/config";
 
 interface ProfileProps {
   onLogoutSuccess?: () => void;
@@ -48,7 +49,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
         ...formData,
       };
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/update-profile`,
+        `${baseURL}/api/update-profile`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -67,7 +68,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/logout`, { method: "POST" });
+      await fetch(`${baseURL}/api/logout`, { method: "POST" });
       toast.success("Logged out successfully");
       localStorage.removeItem("user");
       localStorage.removeItem("token");

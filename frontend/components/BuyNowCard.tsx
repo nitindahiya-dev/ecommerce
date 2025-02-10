@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import PrimaryButton from "./PrimaryButton";
 import { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
+import PlaceholderImage from "../public/image/before.jpg"
 
 interface BuyNowCardProps {
   productImage: string | StaticImageData | undefined;
@@ -30,7 +31,7 @@ const BuyNowCard = ({
   const getImageSrc = (img: string | StaticImageData | undefined): string => {
     if (!img) {
       // Return a fallback image URL or an empty string
-      return "/path/to/placeholder.jpg"; // <-- Replace with your fallback image if needed
+      return `${PlaceholderImage}`; // <-- Replace with your fallback image if needed
       // Or simply: return "";
     }
     return typeof img === "string" ? img : img.src;

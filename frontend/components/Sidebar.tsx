@@ -1,3 +1,4 @@
+// frontend/components/Sidebar.tsx
 "use client";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,20 +8,20 @@ import Register from "./Register";
 import WishList from "./Wishlist";
 import Cart from "./Cart";
 import Profile from "./Profile";
+import ForgetPassword from "./ForgetPassword";
 
 export interface SidebarProps {
   onClose: () => void;
   title?: string;
-  contentType: "login" | "wishlist" | "cart" | "register" | "profile";
+  contentType: "login" | "wishlist" | "cart" | "register" | "profile" | "forgetPassword";
   children?: React.ReactNode;
   widthClass?: string;
   overlayClassName?: string;
-  onContentTypeChange?: (type: "login" | "register") => void;
+  onContentTypeChange?: (type: "login" | "register" | "forgetPassword") => void;
   onLoginSuccess?: (user: { id: number; name: string; email: string }) => void;
   onLogoutSuccess?: () => void;
   user?: { id: number; name: string; email: string } | null;
 }
-
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -71,22 +72,38 @@ const Sidebar: React.FC<SidebarProps> = ({
               <HiX className="h-6 w-6" />
             </button>
           </div>
-          {contentType === "profile" ? (
+          {contentType === "forgetPassword" ? (
+            <ForgetPassword onContentTypeChange={() => { if (onContentTypeChange) { onContentTypeChange("login"); } }} />
+          ) : contentType === "profile" ? (
             user ? (
               <Profile onLogoutSuccess={onLogoutSuccess} user={user} />
             ) : (
               <Login
-                onContentTypeChange={() => onContentTypeChange && onContentTypeChange("register")}
+                onContentTypeChange={(type) => {
+                  if (onContentTypeChange) {
+                    onContentTypeChange(type);
+                  }
+                }}
                 onLoginSuccess={onLoginSuccess}
               />
             )
           ) : contentType === "login" ? (
             <Login
-              onContentTypeChange={() => onContentTypeChange && onContentTypeChange("register")}
+              onContentTypeChange={(type) => {
+                if (onContentTypeChange) {
+                  onContentTypeChange(type);
+                }
+              }}
               onLoginSuccess={onLoginSuccess}
             />
           ) : contentType === "register" ? (
-            <Register onContentTypeChange={() => onContentTypeChange && onContentTypeChange("login")} />
+            <Register
+              onContentTypeChange={() => {
+                if (onContentTypeChange) {
+                  onContentTypeChange("login");
+                }
+              }}
+            />
           ) : contentType === "wishlist" ? (
             <WishList />
           ) : contentType === "cart" ? (
