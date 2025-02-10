@@ -14,10 +14,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log('MAILGUN_SMTP_USER:', process.env.MAILGUN_SMTP_USER);
-console.log('MAILGUN_SMTP_PASSWORD:', process.env.MAILGUN_SMTP_PASSWORD);
-
-
 // Send password reset email
 export async function sendResetEmail(to: string, resetToken: string) {
   // Get correct frontend URL

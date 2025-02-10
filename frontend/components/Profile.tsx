@@ -7,6 +7,9 @@ import { HiPencil, HiCamera, HiLogout } from "react-icons/hi";
 import Image from "next/image";
 import afterImage from "../public/image/after.jpg";
 import { baseURL } from "@/config";
+import { HiTrash } from "react-icons/hi";
+import { Dialog } from "@headlessui/react";
+
 
 interface ProfileProps {
   onLogoutSuccess?: () => void;
@@ -29,12 +32,44 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
     confirmPassword: "",
   });
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleDeleteAccount = async () => {
+    console.log("Deleting account for user:", user?.id, "with password:", deletePassword);
+    try {
+      const res = await fetch(`${baseURL}/api/delete-account`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id,
+          password: deletePassword,
+        }),
+      });
+  
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Account deletion failed");
+      }
+  
+      toast.success("Account deleted successfully");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      onLogoutSuccess?.();
+    } catch (error) {
+      toast.error("Error deleting account");
+      console.error("Delete error:", error);
+    }
+  };
+  
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -209,6 +244,63 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
           />
         )}
       </form>
+      <>
+        <PrimaryButton
+          text="Delete Account"
+          type="button"
+          variant="danger"
+          icon={<HiTrash className="mr-2" />}
+          className="w-full mt-4"
+          onClick={() => setIsDeleteModalOpen(true)}
+        />
+
+        {/* Delete Confirmation Modal */}
+        <Dialog
+          open={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          className="relative z-50"
+        >
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog.Panel className="w-full max-w-md rounded-xl bg-white p-6">
+              <Dialog.Title className="text-lg font-bold mb-4">
+                Confirm Account Deletion
+              </Dialog.Title>
+
+              <p className="mb-4 text-red-600">
+                Warning: This action is permanent and cannot be undone!
+              </p>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Enter your password to confirm
+                </label>
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  className="w-full p-2 border rounded-md"
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <PrimaryButton
+                  text="Cancel"
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setIsDeleteModalOpen(false)}
+                />
+                <PrimaryButton
+                  text="Delete Permanently"
+                  variant="danger"
+                  className="flex-1"
+                  onClick={handleDeleteAccount}
+                />
+              </div>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
+      </>
       <PrimaryButton
         text="Logout"
         type="button"

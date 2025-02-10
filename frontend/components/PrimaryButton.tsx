@@ -8,7 +8,7 @@ export interface PrimaryButtonProps {
   className?: string;
   icon?: ReactNode;
   type?: "button" | "submit"; // For native button usage.
-  variant?: "primary" | "secondary";
+  variant?: 'primary' | 'secondary' | 'danger';
   onClick?: () => void;
 }
 

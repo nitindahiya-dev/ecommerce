@@ -132,6 +132,44 @@ app.post("/api/logout", (req: Request, res: Response): void => {
   res.status(200).json({ message: "Logged out successfully" });
 });
 
+// Add this before the test endpoint
+app.delete("/api/delete-account", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId, password } = req.body;
+
+    // Validate input
+    if (!userId || !password) {
+      res.status(400).json({ message: "Missing required fields" });
+      return;
+    }
+
+    // Convert userId to a number if needed
+    const numericUserId = Number(userId);
+
+    // Verify user exists
+    const [user] = await db.select().from(users).where(eq(users.id, numericUserId));
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Verify password
+    const passwordValid = await bcrypt.compare(password, user.password);
+    if (!passwordValid) {
+      res.status(401).json({ message: "Invalid password" });
+      return;
+    }
+
+    // Delete user
+    await db.delete(users).where(eq(users.id, numericUserId));
+
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Delete account error:", error);
+    res.status(500).json({ message: "Error deleting account" });
+  }
+});
+
 app.post(
   "/api/forgot-password",
   (async (req: Request, res: Response): Promise<void> => {
