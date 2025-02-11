@@ -250,7 +250,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
           type="button"
           variant="danger"
           icon={<HiTrash className="mr-2" />}
-          className="w-full mt-4"
+          className="w-full mt-4 text-white bg-[var(--primary)] hover:bg-transparent hover:text-[var(--primary)]"
           onClick={() => setIsDeleteModalOpen(true)}
         />
 

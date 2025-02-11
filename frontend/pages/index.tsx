@@ -15,8 +15,40 @@ import CountUp from "react-countup";
 import { Compare } from "../components/ui/compare";
 import Footer from "../components/Footer";
 import BuyNowCard from "../components/BuyNowCard";
-import { HiArrowRight, HiSparkles } from "react-icons/hi2";
+import { HiArrowRight } from "react-icons/hi2";
 import { motion } from "framer-motion";
+
+// Animation Variants
+const slideInVariants = {
+  hidden: { opacity: 0, x: -100 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+};
+
+const popUpVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 100 } },
+};
+
+const rotateVariants = {
+  hidden: { opacity: 0, rotate: -45 },
+  visible: { opacity: 1, rotate: 0, transition: { type: "spring", stiffness: 120 } },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 interface Product {
   id: number;
@@ -31,7 +63,6 @@ interface Product {
 export default function Home() {
   const [featuredBotanicals, setFeaturedBotanicals] = useState<Product[]>([]);
   const [showAllBotanicals, setShowAllBotanicals] = useState(false);
-
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,19 +83,33 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  // Stats data as an array of tuples: [number, label, emoji]
+  const stats: [number, string, string][] = [
+    [880, "Happy Customers", "😊"],
+    [650, "Plant Varieties", "🌿"],
+    [320, "Unique Pots", "🪴"],
+  ];
+
   return (
     <div className="relative bg-background">
-      {/* Navbar Start */}
+      {/* Navbar */}
       <Navbar />
-      {/* Navbar End */}
 
-      {/* Banner Start */}
-      <div className="min-h-[95vh] flex flex-col-reverse sm:flex-row">
-        <div className="sm:pl-32">
-          <h1 className="text-2xl line-clamp-2 sm:text-5xl leading-snug m-5 sm:mb-16 font-unbounded">
+      {/* Animated Banner Section */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="min-h-[95vh] flex flex-col-reverse sm:flex-row"
+      >
+        <motion.div variants={slideInVariants} className="sm:pl-32">
+          <motion.h1
+            variants={popUpVariants}
+            className="text-2xl line-clamp-2 sm:text-5xl leading-snug m-5 sm:mb-16 font-unbounded"
+          >
             {"Cultivate Nature's Beauty, Delivered Fresh"}
-          </h1>
-          <div className="flex flex-col sm:flex-row items-center">
+          </motion.h1>
+          <motion.div variants={rotateVariants} className="flex flex-col sm:flex-row items-center">
             <Image
               src={bannerImage}
               alt="banner plant image"
@@ -74,7 +119,8 @@ export default function Home() {
             <div className="p-5 pb-10 sm:p-16 flex flex-col gap-10 items-start">
               <p className="font-hanken font-thin text-xl">
                 Discover your perfect green companion with our curated selection of{" "}
-                <span className="font-semibold text-[var(--primary)]">650+</span> plants and artisan-crafted pots. Expert guidance included with every purchase!
+                <span className="font-semibold text-[var(--primary)]">650+</span> plants and artisan-crafted pots.
+                Expert guidance included with every purchase!
               </p>
               <PrimaryButton
                 className="text-xl"
@@ -96,27 +142,38 @@ export default function Home() {
                 }
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-2 sm:flex gap-6 px-4 sm:px-0 pt-8 sm:pt-12">
-            {[
-              { number: 880, label: "Happy Customers", emoji: "😊" },
-              { number: 650, label: "Plant Varieties", emoji: "🌿" },
-              { number: 320, label: "Unique Pots", emoji: "🪴" },
-            ].map((stat, index) => (
-              <div key={index} className="p-4 backdrop-blur-sm rounded-xl shadow-sm border border-emerald-50">
+          <motion.div
+            variants={staggerContainer}
+            className="grid grid-cols-2 sm:flex gap-6 px-4 sm:px-0 pt-8 sm:pt-12"
+          >
+            {stats.map(([num, label, emoji], index) => (
+              <motion.div
+                key={index}
+                variants={popUpVariants}
+                className="p-4 backdrop-blur-sm rounded-xl shadow-sm border border-emerald-50"
+              >
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl">{stat.emoji}</span>
-                  <CountUp end={stat.number} className="font-bold text-3xl text-emerald-600" />
+                  <span className="text-2xl">{emoji}</span>
+                  <CountUp end={Number(num)} className="font-bold text-3xl text-emerald-600" />
                   <span className="text-emerald-600">+</span>
                 </div>
-                <p className="mt-1 text-gray-600 font-medium">{stat.label}</p>
-              </div>
+                <p className="mt-1 text-gray-600 font-medium">{label}</p>
+              </motion.div>
             ))}
-          </div>
-        </div>
-        <div className="sm:w-[70vw]">
+          </motion.div>
+        </motion.div>
+
+        {/* Carousel Section */}
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, x: 100 },
+            visible: { opacity: 1, x: 0 },
+          }}
+          className="sm:w-[70vw]"
+        >
           <Carousel
             showThumbs={false}
             showIndicators={false}
@@ -130,32 +187,51 @@ export default function Home() {
             <Image src={carouselImage1} alt="carousel image 1" priority />
             <Image src={carouselImage2} loading="lazy" alt="carousel image 2" />
           </Carousel>
-        </div>
-      </div>
-      {/* Banner End */}
+        </motion.div>
+      </motion.div>
 
       {/* Featured Botanicals Section */}
-      <div className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto">
-        <h2 className="text-2xl sm:text-5xl font-unbounded mb-10">Featured Botanicals</h2>
-        <div className="flex justify-between flex-col sm:flex-row gap-7 w-full flex-wrap">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={staggerContainer}
+        viewport={{ once: true, amount: 0.2 }}
+        className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto"
+      >
+        <motion.h2 variants={fadeIn} className="text-2xl sm:text-5xl font-unbounded mb-10">
+          Featured Botanicals
+        </motion.h2>
+        <motion.div
+          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 w-full gap-8 lg:gap-12"
+        >
           {featuredBotanicals.length > 0 ? (
             featuredBotanicals
               .slice(0, showAllBotanicals ? featuredBotanicals.length : 4)
               .map((item) => (
-                <BuyNowCard
+                <motion.div
                   key={item.id}
-                  productImage={item.image}
-                  productImageHover={item.image}
-                  title={item.title}
-                  price={item.price}
-                  sizes={item.size}  // Remove the extra array brackets
-                  buttonHref="#"
-                />
+                  variants={{
+                    hidden: { opacity: 0, y: 50 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <BuyNowCard
+                    productImage={item.image}
+                    productImageHover={item.image}
+                    title={item.title}
+                    price={item.price}
+                    sizes={item.size}
+                    buttonHref="#"
+                  />
+                </motion.div>
               ))
           ) : (
             <p className="text-center text-gray-500">Loading products...</p>
           )}
-        </div>
+        </motion.div>
         {featuredBotanicals.length > 4 && (
           <button
             onClick={() => setShowAllBotanicals(!showAllBotanicals)}
@@ -164,46 +240,58 @@ export default function Home() {
             {showAllBotanicals ? "Show Less" : "See More"}
           </button>
         )}
-      </div>
-      {/* Featured Botanicals End */}
+      </motion.div>
 
-      {/* Transformation Gallery (BeforeAfter) */}
-      <div className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto">
-        <h2 className="text-2xl sm:text-5xl font-unbounded mb-10">Transformation Gallery</h2>
-        <div className="w-full relative">
-          <Compare
-            firstImage={beforeImage}
-            secondImage={afterImage}
-            firstImageClassName="object-cover object-left-top"
-            secondImageClassname="object-cover object-left-top"
-            className="h-[250px] md:h-[600px] w-full"
-            slideMode="hover"
-          />
-          <div className="flex justify-between bottom-5 left-5 right-5 absolute z-20">
-            <p className="bg-[var(--background)] text font-unbounded font-bold px-5 py-2 tracking-widest sm:text-lg">
-              After
-            </p>
-            <p className="bg-[var(--background)] font-unbounded font-bold px-5 py-2 tracking-widest sm:text-lg">
-              Before
-            </p>
-          </div>
+      {/* Transformation Gallery Section */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="flex items-center mb-10 sm:mb-32 flex-col justify-center sm:gap-10 max-w-[85vw] mx-auto relative"
+      >
+        <motion.h2 variants={fadeIn} className="text-2xl sm:text-5xl font-unbounded mb-10">
+          Transformation Gallery
+        </motion.h2>
+        <Compare
+          firstImage={beforeImage}
+          secondImage={afterImage}
+          firstImageClassName="object-cover object-left-top"
+          secondImageClassname="object-cover object-left-top"
+          className="h-[250px] md:h-[600px] w-full"
+          slideMode="hover"
+        />
+        <div className="flex justify-between absolute bottom-5 left-5 right-5 z-20">
+          <p className="bg-[var(--background)] text font-unbounded font-bold px-5 py-2 tracking-widest sm:text-lg">
+            After
+          </p>
+          <p className="bg-[var(--background)] font-unbounded font-bold px-5 py-2 tracking-widest sm:text-lg">
+            Before
+          </p>
         </div>
-      </div>
-      {/* Transformation Gallery End */}
+      </motion.div>
 
       {/* Latest Collection Section */}
-      <section className="py-16 bg-gradient-to-b from-green-50/20 to-white">
+      <motion.section
+        className="py-16"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14 lg:mb-20">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-unbounded font-bold bg-gradient-to-r from-green-600 to-emerald-800 bg-clip-text text-transparent">
+          <motion.div variants={fadeIn} className="text-center mb-14 lg:mb-20">
+            <h2 className="text-2xl sm:text-5xl font-unbounded mb-5 ">
               New Arrivals
             </h2>
-            <p className="mt-4 font-hanken text-lg text-gray-600 max-w-2xl mx-auto">
-              {`Discover our freshest botanical additions - carefully curated to bring nature's beauty to your space`}
+            <p className="font-hanken text-lg text-gray-600 max-w-xl mx-auto">
+              {` Discover our freshest botanical additions - carefully curated to bring nature's beauty to your space`}
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+          </motion.div>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12"
+            variants={staggerContainer}
+          >
             {[latestImage1, latestImage2, latestImage1].map((img, index) => (
               <motion.div
                 key={index}
@@ -220,20 +308,15 @@ export default function Home() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
                 </div>
-
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="font-unbounded text-2xl mb-2 drop-shadow-md">
-                    {[
-                      'Air Purifying Plants',
-                      'Low-Light Champions',
-                      'Pet-Friendly Greens'
-                    ][index]}
+                    {["Air Purifying Plants", "Low-Light Champions", "Pet-Friendly Greens"][index]}
                   </h3>
                   <p className="font-hanken text-lg opacity-90 mb-4">
                     {[
-                      'Natural air filters for healthier living spaces',
-                      'Thrives in any light condition',
-                      'Safe and beautiful for furry friends'
+                      "Natural air filters for healthier living spaces",
+                      "Thrives in any light condition",
+                      "Safe and beautiful for furry friends",
                     ][index]}
                   </p>
                   <button className="flex items-center gap-2 text-green-100 hover:text-white transition-colors">
@@ -241,7 +324,6 @@ export default function Home() {
                     <HiArrowRight className="w-5 h-5" />
                   </button>
                 </div>
-
                 <div className="absolute top-4 right-4">
                   <span className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-sm font-hanken font-medium text-emerald-700">
                     New Arrival
@@ -249,22 +331,37 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <button className="bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3 rounded-full font-unbounded transition-colors duration-300 flex items-center gap-2 mx-auto">
-              <HiSparkles className="w-5 h-5" />
-              View All Collections
-              <HiArrowRight className="w-5 h-5" />
-            </button>
-          </div>
+          </motion.div>
+          <PrimaryButton
+            className="text-xl w-96 mt-16 mx-auto"
+            href="#"
+            text="Start Your Green Journey"
+            icon={
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                className="mr-2 mt-1"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            }
+          />
         </div>
-      </section>
+      </motion.section>
       {/* Latest Collection End */}
 
-      {/* Footer Start */}
+      {/* Footer */}
       <Footer />
-      {/* Footer End */}
     </div>
   );
 }

@@ -1,11 +1,3 @@
 This project is under construction
-
-test account:
-email : admin@gmail.com
-password : 12345
-
-
-1) Make user interface better
-2) Create Product API
-3) Login with google
-4) Use Redux for state management
+1) Login with google
+2) Create ..product..cart and wishlist workflow
