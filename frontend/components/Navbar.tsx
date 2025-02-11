@@ -77,7 +77,7 @@ const Navbar = () => {
             <div className="hidden md:flex md:items-center md:space-x-8">
               <Link href="#" className="hover:text-gray-600 transition-colors">Home</Link>
               <Link href="#" className="hover:text-gray-600 transition-colors">Our Story</Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">Products</Link>
+              <Link href="/products" className="hover:text-gray-600 transition-colors">Products</Link>
               <Link href="#" className="hover:text-gray-600 transition-colors">Blog</Link>
               <Link href="#" className="hover:text-gray-600 transition-colors">Contacts</Link>
             </div>
@@ -117,7 +117,7 @@ const Navbar = () => {
             <div className="flex flex-col items-start p-8 space-y-6">
               <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Home</Link>
               <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Our Story</Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Products</Link>
+              <Link href="/products" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Products</Link>
               <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Blog</Link>
               <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Contacts</Link>
             </div>

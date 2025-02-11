@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
 import bannerImage from "../public/image/bannerImage.jpg";
 import carouselImage1 from "../public/image/carousel-image-1.jpg";
 import carouselImage2 from "../public/image/carousel-image-2.jpg";
@@ -13,10 +12,10 @@ import { Carousel } from "react-responsive-carousel";
 import PrimaryButton from "../components/PrimaryButton";
 import CountUp from "react-countup";
 import { Compare } from "../components/ui/compare";
-import Footer from "../components/Footer";
 import BuyNowCard from "../components/BuyNowCard";
 import { HiArrowRight } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 // Animation Variants
 const slideInVariants = {
@@ -92,8 +91,6 @@ export default function Home() {
 
   return (
     <div className="relative bg-background">
-      {/* Navbar */}
-      <Navbar />
 
       {/* Animated Banner Section */}
       <motion.div
@@ -209,29 +206,34 @@ export default function Home() {
             featuredBotanicals
               .slice(0, showAllBotanicals ? featuredBotanicals.length : 4)
               .map((item) => (
-                <motion.div
-                  key={item.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 50 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <BuyNowCard
-                    productImage={item.image}
-                    productImageHover={item.image}
-                    title={item.title}
-                    price={item.price}
-                    sizes={item.size}
-                    buttonHref="#"
-                  />
-                </motion.div>
+                <Link key={item.id} href={`/product/${item.id}`} passHref>
+                  {/* Wrap your BuyNowCard with Link */}
+
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 50 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <BuyNowCard
+                      productImage={item.image}
+                      productImageHover={item.image}
+                      title={item.title}
+                      price={item.price}
+                      sizes={item.size}
+                      buttonHref="#"  // This can be ignored now since the Link handles the routing.
+                    />
+                  </motion.div>
+
+                </Link>
               ))
           ) : (
             <p className="text-center text-gray-500">Loading products...</p>
           )}
         </motion.div>
+        {/* See More button */}
         {featuredBotanicals.length > 4 && (
           <button
             onClick={() => setShowAllBotanicals(!showAllBotanicals)}
@@ -360,8 +362,6 @@ export default function Home() {
       </motion.section>
       {/* Latest Collection End */}
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

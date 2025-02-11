@@ -1,4 +1,3 @@
-// components/PrimaryButton.tsx
 import Link from "next/link";
 import React, { ReactNode } from "react";
 
@@ -8,8 +7,9 @@ export interface PrimaryButtonProps {
   className?: string;
   icon?: ReactNode;
   type?: "button" | "submit"; // For native button usage.
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: "primary" | "secondary" | "danger";
   onClick?: () => void;
+  disabled?: boolean; // <-- Add this line
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
@@ -20,6 +20,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   type = "button",
   variant = "primary",
   onClick,
+  disabled = false, // default to false if not provided
 }) => {
   // Define variant styling classes.
   let variantClasses = "";
@@ -29,8 +30,15 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   } else if (variant === "secondary") {
     variantClasses =
       "bg-white text-[var(--primary)] border border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white";
+  } else if (variant === "danger") {
+    variantClasses =
+      "bg-red-600 text-white hover:bg-red-700";
   }
-  const commonClasses = `flex items-center justify-center font-hanken text-xl px-12 py-3 rounded-full hover:outline outline-2 ${variantClasses} ${className}`;
+
+  // Optionally add disabled styling if disabled
+  const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "";
+
+  const commonClasses = `flex items-center justify-center font-hanken text-xl px-12 py-3 rounded-full hover:outline outline-2 ${variantClasses} ${disabledClasses} ${className}`;
 
   // If href is provided, render a Link; otherwise, render a button.
   if (href) {
@@ -42,7 +50,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     );
   }
   return (
-    <button type={type} className={commonClasses} onClick={onClick}>
+    <button type={type} className={commonClasses} onClick={onClick} disabled={disabled}>
       {icon}
       {text}
     </button>
