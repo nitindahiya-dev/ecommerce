@@ -20,15 +20,16 @@ initDb();
 
 // Configure CORS with a dynamic origin function
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL_PROD
-    : process.env.FRONTEND_URL_DEV,
+  origin: [
+    process.env.FRONTEND_URL_PROD,
+    process.env.FRONTEND_URL_DEV
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
   optionsSuccessStatus: 200
 };
-
 app.use(cors(corsOptions));
+
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
