@@ -65,7 +65,7 @@ const Footer = () => {
             <h4 className="font-unbounded text-lg">Quick Links</h4>
             <ul className="font-hanken font-thin space-y-2">
               {[
-                { href: '/about', text: 'About Us' },
+                { href: '/story', text: 'Our Story' },
                 { href: '/blog', text: 'Care Guides' },
                 { href: '/contact', text: 'Contact' },
                 { href: '/faq', text: 'FAQ' },
@@ -110,7 +110,7 @@ const Footer = () => {
                 { name: 'Twitter', path: 'M6 2a4 4 0 100 8 4 4 0 000-8zM4 6a2 2 0 114 0 2 2 0 01-4 0zm12 8h-6v-2h6v2zm-8 0H2v-2h6v2zm8-4h-6V8h6v2zm-8-4H2V6h6v2z' },
                 { name: 'YouTube', path: 'M10 18a8 8 0 100-16 8 8 0 000 16zM7 9v6l6-3-6-3z' },
               ].map((social) => (
-                <a
+                <Link
                   key={social.name}
                   href="#"
                   className="text-gray-500 hover:text-primary transition-colors"
@@ -118,7 +118,7 @@ const Footer = () => {
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d={social.path} clipRule="evenodd" />
                   </svg>
-                </a>
+                </Link>
               ))}
             </div>
           </div>

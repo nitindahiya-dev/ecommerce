@@ -1,14 +1,13 @@
 // pages/_app.tsx
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import { Provider } from 'react-redux';
-import store from '../store';
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
+import store from "../store";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from 'react-toastify';
-import { useEffect, useState } from 'react';
-import Cookies from '../components/Cookies';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
+import Cookies from "../components/Cookies";
+import Layout from "../components/layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
@@ -22,18 +21,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  // Pass the user (and setUser function if needed) via pageProps or context.
   return (
     <Provider store={store}>
-      {/* Navbar */}
-      <Navbar />
-
-      <Component {...pageProps} user={user} setUser={setUser} />
+      <Layout>
+        <Component {...pageProps} user={user} setUser={setUser} />
+      </Layout>
       <ToastContainer position="bottom-right" autoClose={3000} />
       <Cookies />
-      {/* Footer */}
-      <Footer />
-
     </Provider>
   );
 }

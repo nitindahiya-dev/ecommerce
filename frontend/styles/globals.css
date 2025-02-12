@@ -138,3 +138,5 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@import '~leaflet/dist/leaflet.css';

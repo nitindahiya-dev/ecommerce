@@ -222,7 +222,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
         )}
         {isEditing ? (
           <div className="flex gap-2">
-            <PrimaryButton text="Save Changes" type="submit" className="w-full" />
+            <PrimaryButton text="Save Changes" type="submit" className="w-full text-[15px]" />
             <PrimaryButton
               text="Cancel"
               type="button"
@@ -283,7 +283,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
                 />
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 text-[15px]">
                 <PrimaryButton
                   text="Cancel"
                   variant="secondary"
@@ -293,7 +293,7 @@ const Profile: React.FC<ProfileProps> = ({ onLogoutSuccess, user }) => {
                 <PrimaryButton
                   text="Delete Permanently"
                   variant="danger"
-                  className="flex-1"
+                  className="flex-1 hover:bg-transparent hover:outline hover:outline-1 hover:text-red-700"
                   onClick={handleDeleteAccount}
                 />
               </div>

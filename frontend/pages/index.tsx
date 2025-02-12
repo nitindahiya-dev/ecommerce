@@ -61,7 +61,27 @@ interface Product {
 
 export default function Home() {
   const [featuredBotanicals, setFeaturedBotanicals] = useState<Product[]>([]);
-  const [showAllBotanicals, setShowAllBotanicals] = useState(false);
+
+
+
+  const [wishlist, setWishlist] = useState<Product[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('wishlist');
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
+  // Add to wishlist function
+  const addToWishlist = (product: Product) => {
+    setWishlist(prev => {
+      const exists = prev.some(item => item.id === product.id);
+      const updated = exists ? prev : [...prev, product];
+      localStorage.setItem('wishlist', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -121,21 +141,10 @@ export default function Home() {
               </p>
               <PrimaryButton
                 className="text-xl"
-                href="#"
+                href="/products"
                 text="Start Your Green Journey"
                 icon={
-                  <svg
-                    stroke="currentColor"
-                    className="mr-2 mt-1"
-                    fill="currentColor"
-                    strokeWidth="0"
-                    viewBox="0 0 256 256"
-                    height="1.2em"
-                    width="1.2em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M235.55,71.3a9.44,9.44,0,0,0-8.28-6.51L187.9,61.68,172.75,25.77a9.51,9.51,0,0,0-17.49,0L140.1,61.68l-39.36,3.11a9.39,9.39,0,0,0-5.4,16.53l30,25.28-9.14,37.79a9.24,9.24,0,0,0,3.58,9.75,9.52,9.52,0,0,0,10.56.48L164,134.32l33.72,20.3a9.52,9.52,0,0,0,10.56-.48,9.24,9.24,0,0,0,3.58-9.75l-9.15-37.79,29.95-25.28A9.34,9.34,0,0,0,235.55,71.3Z" />
-                  </svg>
+                  <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" aria-hidden="true" className="mr-2 mt-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z" clipRule="evenodd"></path></svg>
                 }
               />
             </div>
@@ -204,43 +213,57 @@ export default function Home() {
         >
           {featuredBotanicals.length > 0 ? (
             featuredBotanicals
-              .slice(0, showAllBotanicals ? featuredBotanicals.length : 4)
-              .map((item) => (
-                <Link key={item.id} href={`/product/${item.id}`} passHref>
-                  {/* Wrap your BuyNowCard with Link */}
-
-                  <motion.div
-                    variants={{
-                      hidden: { opacity: 0, y: 50 },
-                      visible: { opacity: 1, y: 0 },
-                    }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.05 }}
+              .slice(0, 4)
+              .map((item) => {
+                const isFavorite = wishlist.some(product => product.id === item.id);
+                return (
+                  <div
+                    key={item.id}
                   >
-                    <BuyNowCard
-                      productImage={item.image}
-                      productImageHover={item.image}
-                      title={item.title}
-                      price={item.price}
-                      sizes={item.size}
-                      buttonHref="#"  // This can be ignored now since the Link handles the routing.
-                    />
-                  </motion.div>
-
-                </Link>
-              ))
+                    <div className="relative">
+                      <button
+                        onClick={() => addToWishlist(item)}
+                        className="absolute top-2 right-2 z-10 p-2 bg-white/80 rounded-full hover:bg-white transition-colors"
+                      >
+                        <svg
+                          className={`w-6 h-6 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-400'}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                          />
+                        </svg>
+                      </button>
+                      <Link href={`/product/${item.id}`} passHref>
+                          <BuyNowCard
+                            productImage={item.image}
+                            productImageHover={item.image}
+                            title={item.title}
+                            price={item.price}
+                            sizes={item.size}
+                            buttonHref="#"
+                          />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })
           ) : (
             <p className="text-center text-gray-500">Loading products...</p>
           )}
         </motion.div>
-        {/* See More button */}
+
         {featuredBotanicals.length > 4 && (
-          <button
-            onClick={() => setShowAllBotanicals(!showAllBotanicals)}
-            className="mt-10 bg-[var(--primary)] text-white px-6 py-3 rounded-lg font-unbounded hover:text-[var(--primary)] hover:outline hover:outline-1 hover:bg-[var(--primary-dark)] transition-colors"
-          >
-            {showAllBotanicals ? "Show Less" : "See More"}
-          </button>
+          <Link href="/products" passHref>
+            <button className="mt-10 bg-[var(--primary)] text-white px-6 py-3 rounded-lg font-unbounded hover:text-[var(--primary)] hover:outline hover:outline-1 hover:bg-[var(--primary-dark)] transition-colors">
+              See More
+            </button>
+          </Link>
         )}
       </motion.div>
 
@@ -336,7 +359,7 @@ export default function Home() {
           </motion.div>
           <PrimaryButton
             className="text-xl w-96 mt-16 mx-auto"
-            href="#"
+            href="/products"
             text="Start Your Green Journey"
             icon={
               <svg

@@ -65,21 +65,32 @@ export default function ProductPage({ product }: ProductPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="container mx-auto p-8">
-        <motion.button
-          variants={fadeIn}
-          onClick={() => router.back()}
-          className="mb-8 flex items-center gap-2 text-gray-600 hover:text-[var(--primary)] transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+      className="container mx-auto p-8"
+    >
+      <PrimaryButton
+        text="Back to Shop"
+        onClick={() => router.back()}
+        className="mb-8 flex items-center gap-2 text-gray-600 hover:text-[var(--primary)] transition-colors"
+        icon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Back to Shop
-        </motion.button>
+        }
+      />
 
         <div className="flex flex-col lg:flex-row gap-12">
           <motion.div variants={fadeIn} className="lg:w-1/2">
-            <div className="relative rounded-2xl overflow-hidden shadow-lg bg-white p-6">
+            <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <Image
                 src={product.image}
                 alt={product.title}

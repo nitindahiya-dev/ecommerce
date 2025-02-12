@@ -130,7 +130,7 @@ export default function Checkout() {
           >
             <div className="text-6xl">🛒</div>
             <p className="text-xl text-gray-600">Your cart is empty</p>
-            <PrimaryButton text="Explore Plants" href="/" className="px-8 py-4" />
+            <PrimaryButton text="Explore Plants" href="/products" className="px-8 py-4" />
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

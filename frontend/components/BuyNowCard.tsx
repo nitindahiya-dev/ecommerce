@@ -1,8 +1,9 @@
+// components/BuyNowCard.tsx
 import { cn } from "@/lib/utils";
 import PrimaryButton from "./PrimaryButton";
 import { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
-import PlaceholderImage from "../public/image/before.jpg"
+import PlaceholderImage from "../public/image/before.jpg";
 
 interface BuyNowCardProps {
   productImage: string | StaticImageData | undefined;
@@ -13,7 +14,6 @@ interface BuyNowCardProps {
   buttonHref?: string;
   isNew?: boolean;
 }
-
 
 const BuyNowCard = ({
   productImage,
@@ -26,20 +26,24 @@ const BuyNowCard = ({
 }: BuyNowCardProps) => {
   const [loaded, setLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
   const formattedPrice = typeof price === "number" ? price.toFixed(2) : price;
 
   const getImageSrc = (img: string | StaticImageData | undefined): string => {
     if (!img) {
       // Return a fallback image URL or an empty string
-      return `${PlaceholderImage}`; // <-- Replace with your fallback image if needed
-      // Or simply: return "";
+      return `${PlaceholderImage}`; // Replace with your fallback image if needed
     }
     return typeof img === "string" ? img : img.src;
   };
 
+  // When the component mounts, mark it as loaded.
   useEffect(() => {
     setLoaded(true);
   }, []);
+
+  // Toggle wishlist status and update localStorage accordingly.
+  
 
   return (
     <div className="max-w-sm w-full group/card transform transition-all duration-300 hover:-translate-y-2">
@@ -75,7 +79,6 @@ const BuyNowCard = ({
               NEW!
             </div>
           )}
-
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
         </div>

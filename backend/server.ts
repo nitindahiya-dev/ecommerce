@@ -232,6 +232,8 @@ app.post("/api/reset-password", async (req: Request, res: Response) => {
   }
 });
 
+
+
 // Test endpoint
 app.get("/api", (req: Request, res: Response): void => {
   res.json({ message: "E-commerce API is running" });

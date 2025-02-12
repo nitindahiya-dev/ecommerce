@@ -62,7 +62,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50">
+    <nav className="sticky top-0 z-[999]">
       {/* Top Navbar */}
       <div className="backdrop-blur-md bg-white/30 border-b border-white/20">
         <div className="max-w-[90vw] mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,11 +75,11 @@ const Navbar = () => {
             </div>
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:space-x-8">
-              <Link href="#" className="hover:text-gray-600 transition-colors">Home</Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">Our Story</Link>
+              <Link href="/" className="hover:text-gray-600 transition-colors">Home</Link>
+              <Link href="/story" className="hover:text-gray-600 transition-colors">Our Story</Link>
               <Link href="/products" className="hover:text-gray-600 transition-colors">Products</Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">Blog</Link>
-              <Link href="#" className="hover:text-gray-600 transition-colors">Contacts</Link>
+              <Link href="/blog" className="hover:text-gray-600 transition-colors">Blog</Link>
+              <Link href="/contact" className="hover:text-gray-600 transition-colors">Contacts</Link>
             </div>
             {/* Icons and Mobile Menu Button */}
             <div className="flex items-center gap-4 md:gap-6">
@@ -115,11 +115,11 @@ const Navbar = () => {
             className="fixed top-0 left-0 h-full w-3/4 max-w-sm bg-white/95 backdrop-blur-lg z-50 shadow-lg"
           >
             <div className="flex flex-col items-start p-8 space-y-6">
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Home</Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Our Story</Link>
+              <Link href="/" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Home</Link>
+              <Link href="/story" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Our Story</Link>
               <Link href="/products" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Products</Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Blog</Link>
-              <Link href="#" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Contacts</Link>
+              <Link href="/blog" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Blog</Link>
+              <Link href="/contact" className="text-xl hover:text-gray-600" onClick={toggleMenu}>Contacts</Link>
             </div>
             <button onClick={toggleMenu} className="absolute top-4 right-4 p-2 rounded-md text-gray-600 hover:text-gray-900 focus:outline-none">
               <HiX className="h-8 w-8" />
